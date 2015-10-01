@@ -26,3 +26,12 @@
 *.exe
 *.out
 *.app
+
+# Thumbnails created by windows
+Thumbs.db
+
+# Clutter from some editors
+.user
+
+# Common build directories
+/build*/
