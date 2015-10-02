@@ -1,6 +1,6 @@
 # Example 1
 ## What it does
-This example demonstrates how to detect a face on an image, how to extract biometry data of that face (so called descriptor) and how to compare two descripotrs. As the result of it's work, the example program will tell you whether people shown on two images are actually the same person or not. It will also allow you to pick a threshold for such classification.
+This example demonstrates how to detect a face on an image, how to extract biometry data of that face (so called descriptor) and how to compare two descriptors. As the result of it's work, the example program will tell you whether people shown on two images are actually the same person or not. It will also allow you to pick a threshold for such classification.
 
 ## Prerequisites
 *As said in the introduction page, this repository doesn't provide SDK headers, libraries and tools; you have to obtain them from VisionLabs.*
@@ -13,7 +13,7 @@ The FaceEngine SDK is not about image/video loading, format decoding and such th
 We present a rather rich face processing pipeline. In fact, it is a bit too rich for this sample, but it was made so intentionally to give you a clue of some real world usage scenarios.
 
 ### Stage 0. Preparations
-SDK initializaion is done in one function ```initFaceEngine```. It is pretty straightforward and self-explanatory, so we will not discuss it here.
+SDK initialization is done in one function ```initFaceEngine```. It is pretty straightforward and self-explanatory, so we will not discuss it here.
 
 ### Stage 1. Face detection
 This stage is implemented in ```extractDescriptor``` function.
