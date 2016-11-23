@@ -1,0 +1,35 @@
+# Example 2
+## What it does
+This example demonstrates how to detect a face attributes on an image.
+
+## Prerequisites
+*As said in the introduction page, this repository doesn't provide SDK headers, libraries and tools; you have to obtain them from VisionLabs.*
+
+This example assumes that you have read the **FaceEngine Handbook** already (or at least have it somewhere nearby for reference) and are familar with some core concepts, like memory management, object ownership and life-time control. This sample will not explain these aspects in detail.
+
+## Example walkthrough
+To get familiar with FSDK usage and common prcatices, please go through Example 1 first.
+
+## How to run
+./Example2_Attributes <some_image.ppm>
+
+## Example output
+```shell
+Detections found: 2
+
+Detection 0
+Rect: x=181 y=158 w=99 h=100
+Complex attributes estimated
+Gender: 0.0347422 (1 - man, 0 - woman)
+Natural skin color: 0.993356 (1 - person wears glasses, 0 - person doesn't wear glasses)
+Over exposed: 1.82929e-05 (1 - natural color of skin, 0 - not natural color of skin color)
+Wear glasses: 1.2229e-05 (1 - image is overexposed, 0 - image isn't overexposed)
+
+Detection 1
+Rect: x=259 y=428 w=100 h=100
+Complex attributes estimated
+Gender: 0.994555 (1 - man, 0 - woman)
+Natural skin color: 0.991653 (1 - person wears glasses, 0 - person doesn't wear glasses)
+Over exposed: 1.04189e-05 (1 - natural color of skin, 0 - not natural color of skin color)
+Wear glasses: 2.06595e-06 (1 - image is overexposed, 0 - image isn't overexposed)
+```
