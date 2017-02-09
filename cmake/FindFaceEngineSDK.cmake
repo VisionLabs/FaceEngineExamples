@@ -8,6 +8,8 @@
 # By default FSDKDIR environment variable value is taken.
 set(FSDK_ROOT "$ENV{FSDKDIR}" CACHE PATH "Vision Labs Face SDK root directory.")
 
+option(FSDK_FIND_VLF OFF)
+
 # Look for headers.
 find_path(FSDK_INCLUDE_DIRS
           NAMES FaceEngine.h Types.h Def.h
@@ -76,6 +78,27 @@ foreach(LIB ${FSDK_LIB_NAMES})
 	list(APPEND FSDK_LIBD ${LIB_PATH})
 endforeach()
 
+if(${FSDK_FIND_VLF})
+	# Find vlf release
+	set(VLF_LIB "VLF-NOTFOUND")
+	find_library(VLF_LIB
+				 NAMES vlf
+				 HINTS $ENV{FSDKDIR}
+				 PATHS ${FSDK_ROOT}
+				 PATH_SUFFIXES	lib/${FSDK_LIB_PREFIX}
+								bin/${FSDK_LIB_PREFIX})
+
+	# Find vlf debug
+	set(VLF_LIBD "VLFD-NOTFOUND")
+	find_library(VLF_LIBD
+				 NAMES vlf
+				 HINTS $ENV{FSDKDIR}
+				 PATHS ${FSDK_ROOT}
+				 PATH_SUFFIXES	lib/${FSDK_LIB_PREFIX}
+								bin/${FSDK_LIB_PREFIX})
+endif()
+
+
 #message(STATUS "FSDK [DEBUG]: FSDK_LIB = ${FSDK_LIB}.")
 #message(STATUS "FSDK [DEBUG]: FSDK_LIBD = ${FSDK_LIBD}.")
 
@@ -104,6 +127,13 @@ if(FSDK_FOUND)
 		endforeach()
 		message(STATUS "FSDK [WARN]: Debug libraries are NOT available.")
 	endif()
+	# add vlf
+	if(${FSDK_FIND_VLF})
+		list(APPEND FSDK_LIBRARIES optimized ${VLF_LIB})
+		list(APPEND FSDK_LIBRARIES debug ${VLF_LIBD})
+		message("Find vlf")
+	endif()
+
 	message(STATUS "FSDK [INFO]: Found SDK in ${FSDK_ROOT}.")
 else()
 	message(STATUS "FSDK [WARN]: SDK was NOT found.")
