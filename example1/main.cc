@@ -66,28 +66,28 @@ bool initFaceEngine() {
       return false;
    }
 
-   g_faceDetector = acquire(g_detectorFactory->createDetector(ODT_DEFAULT));
+   g_faceDetector = acquire(g_detectorFactory->createDetector(ODT_DPM));
 
    if(!g_faceDetector) {
       log::error("Failed to create face detector instance.");
       return false;
    }
 
-   g_featureDetector = acquire(g_featureFactory->createDetector(FT_DEFAULT));
+   g_featureDetector = acquire(g_featureFactory->createDetector(FT_VGG));
 
    if(!g_featureDetector) {
       log::error("Failed to create feature detector instance.");
       return false;
    }
 
-   g_descriptorExtractor = acquire(g_descriptorFactory->createExtractor(DT_DEFAULT));
+   g_descriptorExtractor = acquire(g_descriptorFactory->createExtractor(DT_CNN));
 
    if(!g_descriptorExtractor) {
       log::error("Failed to create descriptor extractor instance.");
       return false;
    }
 
-   g_descriptorMatcher = acquire(g_descriptorFactory->createMatcher(DT_DEFAULT));
+   g_descriptorMatcher = acquire(g_descriptorFactory->createMatcher(DT_CNN));
 
    if(!g_descriptorMatcher) {
       log::error("Failed to create descriptor matcher instance.");
@@ -182,7 +182,7 @@ extractDescriptor(const Image& image) {
          auto bestDetection = detections[bestDetectionIndex];
 
          // Stage 3. Create a face descriptor.
-         auto descriptor = acquire(g_descriptorFactory->createDescriptor(DT_DEFAULT));
+         auto descriptor = acquire(g_descriptorFactory->createDescriptor(DT_CNN));
 
          log::debug("Extracting descriptor.");
 
