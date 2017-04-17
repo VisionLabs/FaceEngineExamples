@@ -11,8 +11,6 @@ int main(int argn, char** argv)
         return -1;
     }
 
-    const std::string dataPath = "/opt/visionlabs/data/";
-
     vlf::Image image;
     if( !image.loadFromPPM(argv[1]) )
     {
@@ -29,12 +27,10 @@ int main(int argn, char** argv)
 
     // Creating detector
     fsdk::Ref<fsdk::IDetectorFactory> detectorFactory = fsdk::acquire(faceEngine->createDetectorFactory());
-    detectorFactory->setDataDirectory(dataPath.c_str());
     fsdk::Ref<fsdk::IDetector> detector = fsdk::acquire(detectorFactory->createDetector(fsdk::ODT_DPM));
 
     // Creating feature extractor
     fsdk::Ref<fsdk::IFeatureFactory> featureFactory = fsdk::acquire(faceEngine->createFeatureFactory());
-    featureFactory->setDataDirectory(dataPath.c_str());
     fsdk::Ref<fsdk::IFeatureDetector> featureDetector = fsdk::acquire(featureFactory->createDetector(fsdk::FT_VGG));
     fsdk::Ref<fsdk::IFeatureSet> featureSet = fsdk::acquire(featureFactory->createFeatureSet());
 
@@ -47,7 +43,6 @@ int main(int argn, char** argv)
 
     // Creating estimator
     fsdk::Ref<fsdk::IEstimatorFactory> estimatorFactory = fsdk::acquire(faceEngine->createEstimatorFactory());
-    estimatorFactory->setDataDirectory(dataPath.c_str());
     fsdk::Ref<fsdk::IComplexEstimator> complexEstimator =
         fsdk::acquire(static_cast<fsdk::IComplexEstimator*>(estimatorFactory->createEstimator(fsdk::ET_COMPLEX)));
     fsdk::Ref<fsdk::IQualityEstimator> qualityEstimator =
