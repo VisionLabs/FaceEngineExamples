@@ -16,8 +16,15 @@ echo "== RUNNING EXAMPLE 2 --  ATTRIBUTES  =="
 echo "======================================="
 echo ""
 
-./build/example2/Example2_Attributes portrait.ppm
+./build/example2/Example2 portrait.ppm
 
+echo ""
+echo "======================================="
+echo "== RUNNING EXAMPLE 3 --  MTCNN  =="
+echo "======================================="
+echo ""
+
+./build/example3/Example3 portrait.ppm
 
 echo ""
 echo ""
