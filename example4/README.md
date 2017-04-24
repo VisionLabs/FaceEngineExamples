@@ -17,7 +17,7 @@ To get familiar with FSDK usage and common practices, please go through Example 
 
 ## Example output
 ```shell
-Detection 0
+Detection 1
 Rect: x=201 y=160 w=66 h=89
 Quality estimated
 Quality: 0.438538
@@ -28,7 +28,7 @@ Over exposed: 0.000221025 (1 - image is overexposed, 0 - image isn't overexposed
 Wear glasses: 0.00112553 (1 - person wears glasses, 0 - person doesn't wear glasses)
 Age: 24.9036 (in years)
 
-Detection 1
+Detection 2
 Rect: x=280 y=423 w=72 h=97
 Quality estimated
 Quality: 0.24602

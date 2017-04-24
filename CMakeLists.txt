@@ -32,7 +32,7 @@ if (WITH_FREEIMAGE_EXAMPLE)
             set(FREEIMAGE_LIBRARY_URL "http://download.visionlabs.ru/freeimage/windows/lib/FreeImage.lib")
             set(FREEIMAGE_BINARY_URL "http://download.visionlabs.ru/freeimage/windows/bin/FreeImage.dll")
             
-            file(DOWNLOAD "${FREEIMAGE_INCLUDE_URL}" "${FREEIMAGE_DOWNLOAD_PATH}/include/FreeImage.lib")
+            file(DOWNLOAD "${FREEIMAGE_INCLUDE_URL}" "${FREEIMAGE_DOWNLOAD_PATH}/include/FreeImage.h")
             file(DOWNLOAD "${FREEIMAGE_LIBRARY_URL}" "${FREEIMAGE_DOWNLOAD_PATH}/lib/FreeImage.lib")
             file(DOWNLOAD "${FREEIMAGE_BINARY_URL}" "${FREEIMAGE_DOWNLOAD_PATH}/bin/FreeImage.dll")
         else ()
