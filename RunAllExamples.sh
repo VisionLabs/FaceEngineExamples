@@ -8,7 +8,7 @@ echo "== RUNNING EXAMPLE 1 -- VERIFICATION =="
 echo "======================================="
 echo ""
 
-./build/example1/Example1 portrait.ppm portrait.ppm 0.7
+./build/example1/Example1 FaceEngineExamples/images/Cameron_Diaz.ppm images/Cameron_Diaz_2.ppm 0.7
 
 echo ""
 echo "======================================="
@@ -16,8 +16,15 @@ echo "== RUNNING EXAMPLE 2 --  ATTRIBUTES  =="
 echo "======================================="
 echo ""
 
-./build/example2/Example2_Attributes portrait.ppm
+./build/example2/Example2 FaceEngineExamples/images/portrait.ppm
 
+echo ""
+echo "======================================="
+echo "== RUNNING EXAMPLE 3 --  MTCNN DETECTOR + ATTRIBUTES  =="
+echo "======================================="
+echo ""
+
+./build/example3/Example3 FaceEngineExamples/images/portrait.ppm
 
 echo ""
 echo ""

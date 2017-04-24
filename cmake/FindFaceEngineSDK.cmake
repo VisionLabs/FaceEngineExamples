@@ -8,11 +8,7 @@
 # By default FSDKDIR environment variable value is taken.
 set(FSDK_ROOT "$ENV{FSDKDIR}" CACHE PATH "Vision Labs Face SDK root directory.")
 
-if(WIN32)
-	set(FSDK_FIND_VLF ON)
-else()
-	set(FSDK_FIND_VLF OFF)
-endif()
+option(FSDK_FIND_VLF OFF)
 
 # Look for headers.
 find_path(FSDK_INCLUDE_DIRS
@@ -64,7 +60,7 @@ foreach(LIB ${FSDK_LIB_NAMES})
 				 PATHS ${FSDK_ROOT}
 				 PATH_SUFFIXES	lib/${FSDK_LIB_PREFIX}
 								bin/${FSDK_LIB_PREFIX})
-				 
+
 	list(APPEND FSDK_LIB ${LIB_PATH})
 endforeach()
 
@@ -78,7 +74,7 @@ foreach(LIB ${FSDK_LIB_NAMES})
 				 PATHS ${FSDK_ROOT}
 				 PATH_SUFFIXES	lib/${FSDK_LIB_PREFIX}
 								bin/${FSDK_LIB_PREFIX})
-				 
+
 	list(APPEND FSDK_LIBD ${LIB_PATH})
 endforeach()
 
@@ -91,11 +87,11 @@ if(${FSDK_FIND_VLF})
 				 PATHS ${FSDK_ROOT}
 				 PATH_SUFFIXES	lib/${FSDK_LIB_PREFIX}
 								bin/${FSDK_LIB_PREFIX})
-
+elseif(${FSDK_FIND_VLFD})
 	# Find vlf debug
 	set(VLF_LIBD "VLFD-NOTFOUND")
 	find_library(VLF_LIBD
-				 NAMES vlf
+				 NAMES vlfd
 				 HINTS $ENV{FSDKDIR}
 				 PATHS ${FSDK_ROOT}
 				 PATH_SUFFIXES	lib/${FSDK_LIB_PREFIX}
@@ -111,9 +107,9 @@ include(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(FSDK DEFAULT_MSG 
                                   FSDK_LIB
                                   FSDK_INCLUDE_DIRS)
-								  
+
 set(FSDK_LIBRARIES)
-								  
+
 if(FSDK_FOUND)
 	if(FSDK_LIB)
 		foreach(LIB ${FSDK_LIB})
@@ -134,6 +130,7 @@ if(FSDK_FOUND)
 	# add vlf
 	if(${FSDK_FIND_VLF})
 		list(APPEND FSDK_LIBRARIES optimized ${VLF_LIB})
+	elseif(${FSDK_FIND_VLFD})
 		list(APPEND FSDK_LIBRARIES debug ${VLF_LIBD})
 		message("Find vlf")
 	endif()

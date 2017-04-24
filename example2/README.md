@@ -1,6 +1,6 @@
 # Example 2
 ## What it does
-This example demonstrates how to detect a face attributes on an image.
+This example demonstrates how to estimate a face quality on an image and to detect attributes on an face.
 
 ## Prerequisites
 *As said in the introduction page, this repository doesn't provide SDK headers, libraries and tools; you have to obtain them from VisionLabs.*
@@ -11,13 +11,13 @@ This example assumes that you have read the **FaceEngine Handbook** already (or 
 To get familiar with FSDK usage and common practices, please go through Example 1 first.
 
 ## How to run
-./Example2_Attributes <some_image.ppm>
+./Example2 <some_image.ppm>
 
 ## Example output
-```shell
+```
 Detections found: 2
 
-Detection 0
+Detection 1
 Rect: x=181 y=158 w=99 h=100
 Quality estimated
 Quality: 0.766154
@@ -28,7 +28,7 @@ Over exposed: 0.000160961 (1 - image is overexposed, 0 - image isn't overexposed
 Wear glasses: 0.000944621 (1 - person wears glasses, 0 - person doesn't wear glasses)
 Age: 25.4479 (in years)
 
-Detection 1
+Detection 2
 Rect: x=259 y=428 w=100 h=100
 Quality estimated
 Quality: 0.664652
