@@ -1,6 +1,6 @@
 # Example 4
 ## What it does
-This example demonstrates how to use the FreeImage library to processing images of differrent formats by example the MTCNN detector and MTCNN feature set and to detect a face quality and image and attributes on an image.
+This example demonstrates how to use the FreeImage library to processing images of differrent formats by example the MTCNN detector and MTCNN feature set and to detect a face quality an image and attributes on an image.
 
 ## Prerequisites
 *As said in the introduction page, this repository doesn't provide SDK headers, libraries and tools; you have to obtain them from VisionLabs.*
