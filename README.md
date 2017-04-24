@@ -17,11 +17,11 @@ $ cmake -DFSDK_ROOT=.. ../FaceEngineExamples
 
 ## Run examples
 
-Note: data folder must be at <fsdk_root>/data on Windows and /opt/visionlabs/data on Linux, configuration file faceengine.conf must be at /etc/visionlabs/faceengine.conf on Linux.
+Note: data folder must be at <fsdk_root>/data on Windows and on Linux.
 
 ```
-$ build/example1/Example1 FaceEngineExamples/images/Cameron_Diaz.ppm images/Cameron_Diaz_2.ppm 0.7
-$ build/example1/Example1 FaceEngineExamples/images/Cameron_Diaz.ppm images/Jennifer_Aniston.ppm 0.7
+$ build/example1/Example1 FaceEngineExamples/images/Cameron_Diaz.ppm FaceEngineExamples/images/Cameron_Diaz_2.ppm 0.7
+$ build/example1/Example1 FaceEngineExamples/images/Cameron_Diaz.ppm FaceEngineExamples/images/Jennifer_Aniston.ppm 0.7
 $ build/example2/Example2 FaceEngineExamples/images/portrait.ppm
 $ build/example3/Example3 FaceEngineExamples/images/portrait.ppm
 $ build/example4/Example4 FaceEngineExamples/images/Cameron_Diaz.jpg

@@ -28,12 +28,22 @@ int main(int argc, char *argv[])
     
     vlf::log::info("imagePath: \"%s\".", imagePath);
 
+    // Config FaceEngine root SDK object.
+    fsdk::ISettingsProviderPtr config;
+    config = fsdk::acquire(fsdk::createSettingsProvider("./data/faceengine.conf"));
+    if (!config) {
+        vlf::log::error("Failed to load face engine config.");
+        return -1;
+    }
+
     // Create FaceEngine root SDK object.
-    fsdk::IFaceEnginePtr faceEngine = fsdk::acquire(fsdk::createFaceEngine());
+    fsdk::IFaceEnginePtr faceEngine = fsdk::acquire(fsdk::createFaceEngine(fsdk::CFF_OMIT_SETTINGS));
     if (!faceEngine) {
         vlf::log::error("Failed to create face engine instance.");
         return -1;
     }
+    faceEngine->setSettingsProvider(config);
+    faceEngine->setDataDirectory("./data/");
 
     // Create MTCNN detector.
     fsdk::IDetectorFactoryPtr detectorFactory = fsdk::acquire(faceEngine->createDetectorFactory());

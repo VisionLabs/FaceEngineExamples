@@ -11,6 +11,7 @@
 // will ensure that reference counting functions are called appropriately and the objects
 // are properly destroyed after use.
 fsdk::IFaceEnginePtr g_engine;                          // Root SDK object.
+fsdk::ISettingsProviderPtr g_config;                    // Config root SDK object.
 fsdk::IDetectorFactoryPtr g_detectorFactory;            // Face detector factory.
 fsdk::IFeatureFactoryPtr g_featureFactory;              // Facial feature detector factory.
 fsdk::IDescriptorFactoryPtr g_descriptorFactory;        // Facial descriptor factory.
@@ -28,11 +29,19 @@ bool initFaceEngine() {
     assert(!g_featureFactory);
     assert(!g_descriptorFactory);
 
-    g_engine = fsdk::acquire(fsdk::createFaceEngine());
+    g_config = fsdk::acquire(fsdk::createSettingsProvider("./data/faceengine.conf"));
+    if (!g_config) {
+        vlf::log::error("Failed to load face engine config.");
+        return false;
+    }
+
+    g_engine = fsdk::acquire(fsdk::createFaceEngine(fsdk::CFF_OMIT_SETTINGS));
     if (!g_engine) {
         vlf::log::error("Failed to create face engine instance.");
         return false;
     }
+    g_engine->setSettingsProvider(g_config);
+    g_engine->setDataDirectory("./data/");
 
     g_detectorFactory = fsdk::acquire(g_engine->createDetectorFactory());
     if (!g_detectorFactory) {
