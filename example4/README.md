@@ -24,8 +24,8 @@ Quality: 0.438538
 Complex attributes estimated
 Gender: 0.024827 (1 - man, 0 - woman)
 Natural skin color: 0.991126 (1 - natural color of skin, 0 - not natural color of skin color)
-Over exposed: 0.000221025 (1 - image is overexposed, 0 - image isn`t overexposed)
-Wear glasses: 0.00112553 (1 - person wears glasses, 0 - person doesn`t wear glasses)
+Over exposed: 0.000221025 (1 - image is overexposed, 0 - image isn\`t overexposed)
+Wear glasses: 0.00112553 (1 - person wears glasses, 0 - person doesn\`t wear glasses)
 Age: 24.9036 (in years)
 
 Detection 1
@@ -35,7 +35,7 @@ Quality: 0.24602
 Complex attributes estimated
 Gender: 0.998334 (1 - man, 0 - woman)
 Natural skin color: 0.984857 (1 - natural color of skin, 0 - not natural color of skin color)
-Over exposed: 0.000181418 (1 - image is overexposed, 0 - image isn`t overexposed)
-Wear glasses: 0.000274767 (1 - person wears glasses, 0 - person doesn`t wear glasses)
+Over exposed: 0.000181418 (1 - image is overexposed, 0 - image isn\`t overexposed)
+Wear glasses: 0.000274767 (1 - person wears glasses, 0 - person doesn\`t wear glasses)
 Age: 23.3166 (in years)
 ```
