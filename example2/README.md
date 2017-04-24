@@ -1,6 +1,6 @@
 # Example 2
 ## What it does
-This example demonstrates how to detect a face quality an image and attributes on an image.
+This example demonstrates how to estimate a face quality on an image and to detect attributes on an face.
 
 ## Prerequisites
 *As said in the introduction page, this repository doesn't provide SDK headers, libraries and tools; you have to obtain them from VisionLabs.*
