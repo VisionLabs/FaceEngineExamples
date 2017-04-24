@@ -20,10 +20,10 @@ $ cmake -DFSDK_ROOT=.. ../examples
 Note: data folder must be at <fsdk_root>/data on Windows and /opt/visionlabs/data on Linux
 
 ```
-$ build/example1/Example1 images/Cameron^_Diaz.ppm images/Cameron^_Diaz^_2.ppm 0.7
-$ build/example1/Example1 images/Cameron^_Diaz.ppm images/Jennifer^_Aniston.ppm 0.7
+$ build/example1/Example1 images/Cameron_Diaz.ppm images/Cameron_Diaz_2.ppm 0.7
+$ build/example1/Example1 images/Cameron_Diaz.ppm images/Jennifer_Aniston.ppm 0.7
 $ build/example2/Example2 images/portrait.ppm
 $ build/example3/Example3 images/portrait.ppm
-$ build/example4/Example4 images/Cameron^_Diaz.jpg
-$ build/example5/Example5 images/Jennifer^_Aniston.jpg
+$ build/example4/Example4 images/Cameron_Diaz.jpg
+$ build/example5/Example5 images/Jennifer_Aniston.jpg
 ```
