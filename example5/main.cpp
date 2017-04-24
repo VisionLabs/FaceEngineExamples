@@ -7,37 +7,21 @@
 // Helper function to convert Qt image to FSDK image.
 fsdk::Image convertImage(const QImage &sourceImage);
 
-/*
-    Maximum number of face detections that may be found 
-	in a single image. If actual number of faces exceed 
-	this number, some of the will be discarded. 
-	What exactly faces to be discarded is defined by 
-	implementation.
-*/
-const int MaxDetections = 1000;
-
 int main(int argc, char *argv[])
 {
     // Parse command line arguments.
-    char *imagePath;
-
+    // We expect 1 of them:
+    // 1) path to a image
     if (argc != 2) {
-        vlf::log::info("USAGE: %s <imagePath>\n", argv[0]);
-        return -1;
-    } else {
-        imagePath = argv[1];
-    }
-
-    // Load source image.
-    QImage sourceImage;
-    if (!sourceImage.load(imagePath)) {
-        vlf::log::error("Failed to load image.");
+        std::cout << "USAGE: " << argv[0] << " <image>\n"
+                " *image - path to image\n"
+                << std::endl;
         return -1;
     }
+    char *imagePath = argv[1];
 
-    // Convert Qt image to FSDK image.
-    fsdk::Image image = convertImage(sourceImage);
-
+    vlf::log::info("imagePath: \"%s\".", imagePath);
+    
     // Create FaceEngine root SDK object.
     fsdk::IFaceEnginePtr faceEngine = fsdk::acquire(fsdk::createFaceEngine());
     if (!faceEngine) {
@@ -99,6 +83,19 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    // Load source image.
+    QImage sourceImage;
+    if (!sourceImage.load(imagePath)) {
+        vlf::log::error("Failed to load image.");
+        return -1;
+    }
+
+    // Convert Qt image to FSDK image.
+    fsdk::Image image = convertImage(sourceImage);
+
+    // We assume no more than 10 faces per image.
+    enum { MaxDetections = 10 };
+
     // Data used for MTCNN detection.
 	fsdk::Detection detections[MaxDetections];
 	int detectionsCount(MaxDetections);
@@ -109,8 +106,8 @@ int main(int argc, char *argv[])
             detector.as<fsdk::IMTCNNDetector>()->detect(
                     image,
                     image.getRect(),
-                    detections,
-                    landmarks,
+                    &detections[0],
+                    &landmarks[0],
                     detectionsCount
             );
     if (detectorResult.isError()) {
@@ -127,7 +124,7 @@ int main(int argc, char *argv[])
     for (int detectionIndex = 0; detectionIndex < detectionsCount; ++detectionIndex) {
 	    fsdk::Detection &detection = detections[detectionIndex];
 
-	    std::cout << "Detection " << detectionIndex << "\n"
+	    std::cout << "Detection " << detectionIndex + 1 << "\n"
 	            << "Rect: x=" << detection.rect.x << " y=" << detection.rect.y
                 << " w=" << detection.rect.width << " h=" << detection.rect.height << std::endl;
 
@@ -154,8 +151,7 @@ int main(int argc, char *argv[])
             vlf::log::error("Failed to create quality estimating. Reason: %s.", qualityEstimatorResult.what());
             return -1;
         }
-        std::cout << "Quality estimated\n"
-                << "Quality: " << qualityOut << std::endl;
+        std::cout << "Quality estimated\nQuality: " << qualityOut << std::endl;
 
         // Complex estimating.
         fsdk::ComplexEstimation complexEstimationOut;
@@ -165,11 +161,15 @@ int main(int argc, char *argv[])
             return -1;
         }
         std::cout << "Complex attributes estimated\n"
-                << "Gender: " << complexEstimationOut.gender << " (1 - man, 0 - woman)\n"
-                << "Natural skin color: " << complexEstimationOut.naturSkinColor << " (1 - natural color of skin, 0 - not natural color of skin color)\n"
-                << "Over exposed: " << complexEstimationOut.overExposed << " (1 - image is overexposed, 0 - image isn't overexposed)\n"
-                << "Wear glasses: " << complexEstimationOut.wearGlasses << " (1 - person wears glasses, 0 - person doesn't wear glasses)\n"
-                << "Age: " << complexEstimationOut.age << " (in years)\n"
+                "Gender: " << complexEstimationOut.gender << " (1 - man, 0 - woman)\n"
+                "Natural skin color: " << complexEstimationOut.naturSkinColor
+                << " (1 - natural color of skin, 0 - not natural color of skin color)\n"
+                "Over exposed: " << complexEstimationOut.overExposed
+                << " (1 - image is overexposed, 0 - image isn't overexposed)\n"
+                "Wear glasses: " << complexEstimationOut.wearGlasses
+                << " (1 - person wears glasses, 0 - person doesn't wear glasses)\n"
+                "Age: " << complexEstimationOut.age
+                << " (in years)\n"
                 << std::endl;
     }
 
