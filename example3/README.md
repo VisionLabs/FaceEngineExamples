@@ -14,7 +14,7 @@ To get familiar with FSDK usage and common practices, please go through Example 
 ./Example3 <some_image.ppm>
 
 ## Example output
-```shell
+```
 Detection 1
 Rect: x=201 y=160 w=66 h=89
 Quality estimated
