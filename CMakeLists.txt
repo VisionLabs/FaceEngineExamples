@@ -21,6 +21,10 @@ endif ()
 option(WITH_FREEIMAGE_EXAMPLE "Built example with freeimage library." ON)
 option(WITH_QT_EXAMPLE "Built example with qt library." OFF)
 
+if (WIN32)
+    set(FSDK_FIND_VLF ON CACHE BOOL "Find FSDK vlf library.")
+endif ()
+
 add_subdirectory(example1)
 add_subdirectory(example2)
 add_subdirectory(example3)

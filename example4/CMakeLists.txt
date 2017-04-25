@@ -8,9 +8,6 @@ source_group("Source Files" FILES ${SOURCES})
 
 find_package(FaceEngineSDK REQUIRED)
 include_directories(${FSDK_INCLUDE_DIRS})
-if (WIN32)
-    set(FSDK_FIND_VLF ON CACHE BOOL "Find FSDK vlf library.")
-endif ()
 
 set(FREEIMAGE_DOWNLOAD_PATH "${CMAKE_BINARY_DIR}/freeimage/")
 if (NOT EXISTS "${FREEIMAGE_DOWNLOAD_PATH}")
