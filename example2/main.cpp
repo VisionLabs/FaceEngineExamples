@@ -139,7 +139,8 @@ int main(int argc, char *argv[])
                 <<" w=" << detection.rect.width << " h=" << detection.rect.height << std::endl;
 
         // Create feature set.
-        fsdk::Result<fsdk::FSDKError> featureDetectorResult = featureDetector->detect(imageR, detection, featureSet);
+        fsdk::Result<fsdk::FSDKError> featureDetectorResult =
+                featureDetector->detect(imageR, detection, featureSet);
         if (featureDetectorResult.isError()) {
             vlf::log::error("Failed to create feature set. Reason: %s.", featureDetectorResult.what());
             return -1;
@@ -165,7 +166,8 @@ int main(int argc, char *argv[])
 
         // Complex estimating.
         fsdk::ComplexEstimation complexEstimationOut;
-        fsdk::Result<fsdk::FSDKError> complexEstimatorResult = complexEstimator->estimate(warp, complexEstimationOut);
+        fsdk::Result<fsdk::FSDKError> complexEstimatorResult =
+                complexEstimator->estimate(warp, complexEstimationOut);
         if(complexEstimatorResult.isError()) {
             vlf::log::error("Failed to create complex estimator. Reason: %s.", complexEstimatorResult.what());
             return -1;

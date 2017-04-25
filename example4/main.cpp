@@ -196,7 +196,8 @@ int main(int argc, char *argv[])
 
         // Complex estimating.
         fsdk::ComplexEstimation complexEstimationOut;
-        fsdk::Result<fsdk::FSDKError> complexEstimatorResult = complexEstimator->estimate(warp, complexEstimationOut);
+        fsdk::Result<fsdk::FSDKError> complexEstimatorResult =
+                complexEstimator->estimate(warp, complexEstimationOut);
         if(complexEstimatorResult.isError()) {
             vlf::log::error("Failed to create complex estimator. Reason: %s.", complexEstimatorResult.what());
             return -1;
@@ -219,7 +220,8 @@ int main(int argc, char *argv[])
 
 void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char *message) {
     if (fif != FIF_UNKNOWN)
-        vlf::log::error("FreeImageErrorHandler\nFormat: %s\nMessage: %s.", FreeImage_GetFormatFromFIF(fif), message);
+        vlf::log::error("FreeImageErrorHandler\nFormat: %s\nMessage: %s.",
+                FreeImage_GetFormatFromFIF(fif), message);
     else
         vlf::log::error("FreeImageErrorHandler\nFormat: unknown\nMessage: %s.", message);
 }

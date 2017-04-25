@@ -165,7 +165,8 @@ int main(int argc, char *argv[])
 
         // Complex estimating.
         fsdk::ComplexEstimation complexEstimationOut;
-        fsdk::Result<fsdk::FSDKError> complexEstimatorResult = complexEstimator->estimate(warp, complexEstimationOut);
+        fsdk::Result<fsdk::FSDKError> complexEstimatorResult =
+                complexEstimator->estimate(warp, complexEstimationOut);
         if(complexEstimatorResult.isError()) {
             vlf::log::error("Failed to create complex estimator. Reason: %s.", complexEstimatorResult.what());
             return -1;

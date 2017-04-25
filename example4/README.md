@@ -1,13 +1,20 @@
 # Example 4
 ## What it does
-This example demonstrates how to use the FreeImage library to processing images of different formats by example the MTCNN detector and MTCNN feature set and to estimate a face quality on an image and to detect attributes on an face.
+This example demonstrates how to use the FreeImage library to processing images of different
+formats by example the MTCNN detector and MTCNN feature set and to estimate a face quality
+on an image and to detect attributes on an face.
 
 ## Prerequisites
-*As said in the introduction page, this repository doesn't provide SDK headers, libraries and tools; you have to obtain them from VisionLabs.*
+*As said in the introduction page, this repository doesn't provide SDK headers, libraries and tools;
+you have to obtain them from VisionLabs.*
 
-This example assumes that you have read the **FaceEngine Handbook** already (or at least have it somewhere nearby for reference) and are familar with some core concepts, like memory management, object ownership and life-time control. This sample will not explain these aspects in detail.
+This example assumes that you have read the **FaceEngine Handbook** already
+(or at least have it somewhere nearby for reference) and are familar with some core concepts,
+like memory management, object ownership and life-time control. This sample will not explain
+these aspects in detail.
 
-More detailed information about the FreeImage library can be obtained by clicking on the link http://freeimage.sourceforge.net/.
+More detailed information about the FreeImage library can be obtained by clicking on the link
+http://freeimage.sourceforge.net/.
 
 ## Example walkthrough
 To get familiar with FSDK usage and common practices, please go through Example 1 first.

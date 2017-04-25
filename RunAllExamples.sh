@@ -8,7 +8,7 @@ echo "== RUNNING EXAMPLE 1 -- VERIFICATION =="
 echo "======================================="
 echo ""
 
-./build/example1/Example1 FaceEngineExamples/images/Cameron_Diaz.ppm images/Cameron_Diaz_2.ppm 0.7
+./build/example1/Example1 FaceEngineExamples/images/Cameron_Diaz.ppm FaceEngineExamples/images/Cameron_Diaz_2.ppm 0.7
 
 echo ""
 echo "======================================="
