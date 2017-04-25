@@ -1,5 +1,5 @@
-# FaceEngine Examples
-This repository contains example code for VisionLabs FaceEngine SDK and is compatible
+# LUNA SDK Examples
+This repository contains example code for VisionLabs LUNA SDK and is compatible
 with SDK version 1.0 and newer.
 
 **Please note, that while these examples are released under MIT license, the SDK itself is not.
@@ -18,16 +18,16 @@ Linux families (RHEL, CentOS, Fedora).
 From fsdk root.
 ```
 $ mkdir build && cd build
-$ cmake -DFSDK_ROOT=.. ../FaceEngineExamples
+$ cmake -DFSDK_ROOT=.. ../examples
 ```
 
 ## Run examples
 Note: data folder must be at <fsdk_root>/data on Windows and on Linux.
 ```
-$ build/example1/Example1 FaceEngineExamples/images/Cameron_Diaz.ppm FaceEngineExamples/images/Cameron_Diaz_2.ppm 0.7
-$ build/example1/Example1 FaceEngineExamples/images/Cameron_Diaz.ppm FaceEngineExamples/images/Jennifer_Aniston.ppm 0.7
-$ build/example2/Example2 FaceEngineExamples/images/portrait.ppm
-$ build/example3/Example3 FaceEngineExamples/images/portrait.ppm
-$ build/example4/Example4 FaceEngineExamples/images/Cameron_Diaz.jpg
-$ build/example5/Example5 FaceEngineExamples/images/Jennifer_Aniston.jpg
+$ build/example1/Example1 examples/images/Cameron_Diaz.ppm examples/images/Cameron_Diaz_2.ppm 0.7
+$ build/example1/Example1 examples/images/Cameron_Diaz.ppm examples/images/Jennifer_Aniston.ppm 0.7
+$ build/example2/Example2 examples/images/portrait.ppm
+$ build/example3/Example3 examples/images/portrait.ppm
+$ build/example4/Example4 examples/images/Cameron_Diaz.jpg
+$ build/example5/Example5 examples/images/Jennifer_Aniston.jpg
 ```
