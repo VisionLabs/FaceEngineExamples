@@ -6,6 +6,12 @@ set(SOURCES main.cpp)
 
 source_group("Source Files" FILES ${SOURCES})
 
+find_package(FaceEngineSDK REQUIRED)
+include_directories(${FSDK_INCLUDE_DIRS})
+if (WIN32)
+    set(FSDK_FIND_VLF ON CACHE BOOL "Find FSDK vlf library.")
+endif ()
+
 ###### QT
 # Set CMake paths for Qt modules
 set(QT5_CMAKES CACHE PATH "QT5 Cmake files (qtbase/lib/cmake)")
@@ -18,9 +24,6 @@ endif()
 
 # Instruct CMake to run moc automatically when needed
 set(CMAKE_AUTOMOC ON)
-
-find_package(FaceEngineSDK REQUIRED)
-include_directories(${FSDK_INCLUDE_DIRS})
 
 find_package(Qt5 COMPONENTS Gui REQUIRED)
 
