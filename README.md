@@ -10,7 +10,7 @@ Look into *cmake/* folder for a CMake find script for the SDK. Your are not forc
 CMake but we advise for it.
 
 Currently we support 64 bit Windows and Linux. On Windows everything should work with
-Visual Studio 2015. On Linux we tested this code with GCC 4.9.2 and CLang 3.5.0.
+Visual Studio 2015. On Linux we tested this code with GCC 4.8.5.
 Other versions may work as well. Note, that the SDK is officially supported on RedHat
 Linux families (RHEL, CentOS, Fedora).
 
