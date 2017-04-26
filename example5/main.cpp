@@ -2,6 +2,8 @@
 #include <vlf/Log.h>
 
 #include <QImage>
+#include <QPainter>
+#include <QPen>
 #include <iostream>
 
 // Helper function to convert Qt image to FSDK image.
@@ -126,6 +128,14 @@ int main(int argc, char *argv[])
     }
     detectionsCount = detectorResult.getValue();
     vlf::log::info("Detections found: %d", detectionsCount);
+    
+    // Create image with face detection.
+    QPainter painter;
+    painter.begin(&sourceImage);
+    QPen pen;
+    pen.setWidth(3);
+    pen.setBrush(Qt::green);
+    painter.setPen(pen);
 
     // Feature set.
     fsdk::IFeatureSetPtr featureSet(nullptr);
@@ -182,7 +192,12 @@ int main(int argc, char *argv[])
                 "Age: " << complexEstimationOut.age
                 << " (in years)\n"
                 << std::endl;
+
+        painter.drawRect(detection.rect.x, detection.rect.y, detection.rect.width, detection.rect.height);
     }
+
+    painter.end();
+    sourceImage.save("face_detection.png");
 
     return 0;
 }
