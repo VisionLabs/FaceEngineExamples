@@ -48,12 +48,14 @@ int main(int argc, char *argv[])
     faceEngine->setSettingsProvider(config);
     faceEngine->setDataDirectory("./data/");
 
-    // Create descriptor matcher.
+    // Create descriptor factory.
     fsdk::IDescriptorFactoryPtr descriptorFactory = fsdk::acquire(faceEngine->createDescriptorFactory());
     if (!descriptorFactory) {
         vlf::log::error("Failed to create face descriptor factory instance.");
         return -1;
     }
+
+    // Create CNN descriptor matcher.
     fsdk::IDescriptorMatcherPtr descriptorMatcher =
             fsdk::acquire(descriptorFactory->createMatcher(fsdk::DT_CNN));
     if (!descriptorMatcher) {
@@ -61,9 +63,15 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // Load descriptors.
+    // Create CNN face descriptors.
     fsdk::IDescriptorPtr descriptor1 = fsdk::acquire(descriptorFactory->createDescriptor(fsdk::DT_CNN));
     fsdk::IDescriptorPtr descriptor2 = fsdk::acquire(descriptorFactory->createDescriptor(fsdk::DT_CNN));
+    if (!descriptor1 || !descriptor2) {
+        vlf::log::error("Failed to create face descriptors instance.");
+        return -1;
+    }
+
+    // Load face descriptors.
     std::vector<uint8_t> data;
 
     data = std::move(readFile(firstDescriptorPath));

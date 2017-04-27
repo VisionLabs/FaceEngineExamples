@@ -1,0 +1,41 @@
+# Example 6
+## What it does
+This example demonstrates how to create an LSH table from the batch descriptors,
+use it to find the nearest neighbors with subsequent matches.
+
+## Prerequisites
+*As said in the introduction page, this repository doesn't provide SDK headers,
+libraries and tools; you have to obtain them from VisionLabs.*
+
+This example assumes that you have read the **FaceEngine Handbook** already
+(or at least have it somewhere nearby for reference) and are familar with some core concepts,
+like memory management, object ownership and life-time control. This sample will not explain
+these aspects in detail.
+
+## Example walkthrough
+To get familiar with FSDK usage and common practices, please go through Example 1 first.
+
+## How to run
+./Example6 <imagesPath1> <imagesPath2> <list1> <list2> <threshold>
+
+## Example output
+```
+Images: "Cameron_Diaz.ppm" and "Cameron_Diaz.ppm" belong to one person.
+Images: "Cameron_Diaz.ppm" and "Cameron_Diaz_2.ppm" belong to one person.
+Images: "Cameron_Diaz.ppm" and "Jennifer_Aniston_2.ppm" belong to different persons.
+Images: "Cameron_Diaz_2.ppm" and "Cameron_Diaz_2.ppm" belong to one person.
+Images: "Cameron_Diaz_2.ppm" and "Cameron_Diaz.ppm" belong to one person.
+Images: "Cameron_Diaz_2.ppm" and "Jennifer_Aniston_2.ppm" belong to different persons.
+Images: "Jason_Statham.ppm" and "Jason_Statham.ppm" belong to one person.
+Images: "Jason_Statham.ppm" and "Jason_Statham_2.ppm" belong to one person.
+Images: "Jason_Statham.ppm" and "Jennifer_Aniston.ppm" belong to different persons.
+Images: "Jason_Statham_2.ppm" and "Jason_Statham_2.ppm" belong to one person.
+Images: "Jason_Statham_2.ppm" and "Jason_Statham.ppm" belong to one person.
+Images: "Jason_Statham_2.ppm" and "Jennifer_Aniston.ppm" belong to different persons.
+Images: "Jennifer_Aniston.ppm" and "Jennifer_Aniston.ppm" belong to one person.
+Images: "Jennifer_Aniston.ppm" and "Jennifer_Aniston_2.ppm" belong to one person.
+Images: "Jennifer_Aniston.ppm" and "Cameron_Diaz_2.ppm" belong to different persons.
+Images: "Jennifer_Aniston_2.ppm" and "Jennifer_Aniston_2.ppm" belong to one person.
+Images: "Jennifer_Aniston_2.ppm" and "Jennifer_Aniston.ppm" belong to one person.
+Images: "Jennifer_Aniston_2.ppm" and "Cameron_Diaz.ppm" belong to different persons.
+```

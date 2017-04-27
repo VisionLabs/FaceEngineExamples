@@ -8,6 +8,10 @@
 
 int main(int argc, char *argv[])
 {
+    // Facial feature detection confidence threshold.
+    // We use this value to reject bad face detections.
+    const float confidenceThreshold = 0.25f;
+
     // Parse command line arguments.
     // We expect 1 of them:
     // 1) path to a image
@@ -38,40 +42,43 @@ int main(int argc, char *argv[])
     faceEngine->setSettingsProvider(config);
     faceEngine->setDataDirectory("./data/");
 
-    // Create MTCNN detector.
+    // Create detector factory.
     fsdk::IDetectorFactoryPtr detectorFactory = fsdk::acquire(faceEngine->createDetectorFactory());
     if (!detectorFactory) {
         vlf::log::error("Failed to create face detector factory instance.");
         return -1;
     }
+
+    // Create MTCNN detector.
     fsdk::IDetectorPtr detector = fsdk::acquire(detectorFactory->createDetector(fsdk::ODT_MTCNN));
     if (!detector) {
         vlf::log::error("Failed to create face detector instance.");
         return -1;
     }
 
-    // Create feature detector factory.
+    // Create feature factory.
     fsdk::IFeatureFactoryPtr featureFactory = fsdk::acquire(faceEngine->createFeatureFactory());
     if (!featureFactory) {
         vlf::log::error("Failed to create face feature factory instance.");
         return -1;
     }
     
-    // Create warper.
+    // Create descriptor factory.
     fsdk::IDescriptorFactoryPtr descriptorFactory = fsdk::acquire(faceEngine->createDescriptorFactory());
     if (!descriptorFactory) {
         vlf::log::error("Failed to create face descriptor factory instance.");
         return -1;
     }
+
+    // Create CNN warper.
     fsdk::IWarperPtr warper = fsdk::acquire(descriptorFactory->createWarper(fsdk::DT_CNN));
     if (!warper) {
         vlf::log::error("Failed to create face warper instance.");
         return -1;
     }
 
-    // Create descriptor extractor.
-    fsdk::IDescriptorExtractorPtr descriptorExtractor =
-            fsdk::acquire(descriptorFactory->createExtractor(fsdk::DT_CNN));
+    // Create CNN descriptor extractor.
+    fsdk::IDescriptorExtractorPtr descriptorExtractor = fsdk::acquire(descriptorFactory->createExtractor(fsdk::DT_CNN));
     if (!descriptorExtractor) {
         vlf::log::error("Failed to create face descriptor extractor instance.");
         return -1;
@@ -80,7 +87,7 @@ int main(int argc, char *argv[])
     // Load image.
     fsdk::Image image;
     if (!image.loadFromPPM(imagePath)) {
-        vlf::log::error("Failed to load image: %s", imagePath);
+        vlf::log::error("Failed to load image: \"%s\".", imagePath);
         return -1;
     }
     fsdk::Image imageBGR;
@@ -108,7 +115,7 @@ int main(int argc, char *argv[])
         return -1;
     }
     detectionsCount = detectorResult.getValue();
-    vlf::log::info("Detections found: %d", detectionsCount);
+    vlf::log::info("Detections found: %d.", detectionsCount);
 
     // Feature set.
     fsdk::IFeatureSetPtr featureSet(nullptr);
@@ -119,10 +126,20 @@ int main(int argc, char *argv[])
     // Create descriptor batch.
     fsdk::IDescriptorBatchPtr descriptorBatch =
             fsdk::acquire(descriptorFactory->createDescriptorBatch(fsdk::DT_CNN, detectionsCount));
+    if (!descriptorBatch) {
+        vlf::log::error("Failed to create descriptor batch instance.");
+        return -1;
+    }
 
     // Loop through all the faces.
     for (int detectionIndex = 0; detectionIndex < detectionsCount; ++detectionIndex) {
 	    fsdk::Detection &detection = detections[detectionIndex];
+
+        // Estimate confidence score of face detection.
+        if (detection.score < confidenceThreshold) {
+            vlf::log::info("Face detection succeeded, but confidence score of detection is small.");
+            continue;
+        }
 
         // Create feature set.
         featureSet = fsdk::acquire(featureFactory->createFeatureSet(landmarks[detectionIndex], detection.score));
@@ -138,10 +155,18 @@ int main(int argc, char *argv[])
             vlf::log::error("Failed to create warp. Reason: %s.", warperResult.what());
             return -1;
         }
+
+        // Save warped face.
         warp.saveAsPPM(("warp_" + std::to_string(detectionIndex) + ".ppm").c_str());
         
-        // Get face descriptor.
+        // Create face descriptor.
         descriptor = fsdk::acquire(descriptorFactory->createDescriptor(fsdk::DT_CNN));
+        if (!descriptor) {
+            vlf::log::error("Failed to create face descriptor instance.");
+            return -1;
+        }
+
+        // Extract face descriptor.
         fsdk::Result<fsdk::FSDKError> descriptorExtractorResult = descriptorExtractor->extract(
                 imageBGR,
                 detection,
@@ -165,7 +190,11 @@ int main(int argc, char *argv[])
         }
         
         // Add descriptor to descriptor barch.
-        descriptorBatch->add(descriptor);
+        fsdk::Result<fsdk::DescriptorBatchError> descriptorBatchAddResult = descriptorBatch->add(descriptor);
+        if (descriptorBatchAddResult.isError()) {
+            vlf::log::error("Failed to add descriptor to descriptor batch.");
+            return -1;
+        }
     }
     
     // Save descriptor batch.

@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     // Such objects implement reference counting to manage their life time. The smart pointers
     // will ensure that reference counting functions are called appropriately and the objects
     // are properly destroyed after use.
-    fsdk::IFaceEnginePtr faceEngine;                          // Root SDK object.
+    fsdk::IFaceEnginePtr faceEngine;                      // Root SDK object.
     fsdk::ISettingsProviderPtr config;                    // Config root SDK object.
     fsdk::IDetectorFactoryPtr detectorFactory;            // Face detector factory.
     fsdk::IFeatureFactoryPtr featureFactory;              // Facial feature detector factory.
@@ -50,12 +50,14 @@ int main(int argc, char *argv[])
     fsdk::IDescriptorExtractorPtr descriptorExtractor;    // Facial descriptor extractor.
     fsdk::IDescriptorMatcherPtr descriptorMatcher;        // Descriptor matcher.
 
+    // Create config FaceEngine root SDK object.
     config = fsdk::acquire(fsdk::createSettingsProvider("./data/faceengine.conf"));
     if (!config) {
         vlf::log::error("Failed to load face engine config.");
         return -1;
     }
 
+    // Create FaceEngine root SDK object.
     faceEngine = fsdk::acquire(fsdk::createFaceEngine(fsdk::CFF_OMIT_SETTINGS));
     if (!faceEngine) {
         vlf::log::error("Failed to create face engine instance.");
@@ -64,42 +66,49 @@ int main(int argc, char *argv[])
     faceEngine->setSettingsProvider(config);
     faceEngine->setDataDirectory("./data/");
 
+    // Create detector factory.
     detectorFactory = fsdk::acquire(faceEngine->createDetectorFactory());
     if (!detectorFactory) {
         vlf::log::error("Failed to create face detector factory instance.");
         return -1;
     }
 
+    // Create feature factory.
     featureFactory = fsdk::acquire(faceEngine->createFeatureFactory());
     if (!featureFactory) {
         vlf::log::error("Failed to create face feature factory instance.");
         return -1;
     }
 
+    // Create descriptor factory.
     descriptorFactory = fsdk::acquire(faceEngine->createDescriptorFactory());
     if(!descriptorFactory) {
         vlf::log::error("Failed to create face descriptor factory instance.");
         return -1;
     }
 
+    // Create DPM detector.
     faceDetector = fsdk::acquire(detectorFactory->createDetector(fsdk::ODT_DPM));
     if (!faceDetector) {
         vlf::log::error("Failed to create face detector instance.");
         return -1;
     }
 
+    // Create VGG feature detector.
     featureDetector = fsdk::acquire(featureFactory->createDetector(fsdk::FT_VGG));
     if(!featureDetector) {
         vlf::log::error("Failed to create face feature detector instance.");
         return -1;
     }
 
+    // Create CNN descriptor extractor.
     descriptorExtractor = fsdk::acquire(descriptorFactory->createExtractor(fsdk::DT_CNN));
     if (!descriptorExtractor) {
         vlf::log::error("Failed to create face descriptor extractor instance.");
         return -1;
     }
 
+    // Create CNN descriptor matcher.
     descriptorMatcher = fsdk::acquire(descriptorFactory->createMatcher(fsdk::DT_CNN));
     if (!descriptorMatcher) {
         vlf::log::error("Failed to create face descriptor matcher instance.");
@@ -109,11 +118,11 @@ int main(int argc, char *argv[])
     // Load images.
     fsdk::Image image1, image2;
     if (!image1.loadFromPPM(firstImagePath)) {
-        vlf::log::error("Failed to load image: %s", firstImagePath);
+        vlf::log::error("Failed to load image: \"%s\".", firstImagePath);
         return -1;
     }
     if (!image2.loadFromPPM(secondImagePath)) {
-        vlf::log::error("Failed to load image: %s", secondImagePath);
+        vlf::log::error("Failed to load image: \"%s\".", secondImagePath);
         return -1;
     }
     
@@ -135,7 +144,6 @@ int main(int argc, char *argv[])
             vlf::log::error("Conversion to BGR has failed.");
             return nullptr;
         }
-
         if (!imageR) {
             vlf::log::error("Conversion to grayscale has failed.");
             return nullptr;
@@ -159,33 +167,39 @@ int main(int argc, char *argv[])
                 &detectionsCount
         );
         if (detectorResult.isError()) {
-            vlf::log::error("Failed to create face detection. Reason: %s.", detectorResult.what());
+            vlf::log::error("Failed to detect face detection. Reason: %s.", detectorResult.what());
             return nullptr;
         }
-        
         vlf::log::info("Found %d face(s).", detectionsCount);
 
         // Stage 2. Detect facial features and compute a confidence score.
         fsdk::IFeatureSetPtr bestFeatureSet(nullptr);
         int bestDetectionIndex(0);
 
+        // Create feature set.
+        fsdk::IFeatureSetPtr featureSet = fsdk::acquire(featureFactory->createFeatureSet());
+        if (!featureSet) {
+            vlf::log::error("Failed to create face feature set instance.");
+            return nullptr;
+        }
+
         // Loop through all the faces and find one with the best score.
         for (int detectionIndex = 0; detectionIndex < detectionsCount; ++detectionIndex) {
             fsdk::Detection &detection = detections[detectionIndex];
-            fsdk::IFeatureSetPtr featureSet = fsdk::acquire(featureFactory->createFeatureSet());
-
             vlf::log::info("Detecting facial features (%d/%d).", (detectionIndex + 1), detectionsCount);
 
+            // Detect feature set.
             fsdk::Result<fsdk::FSDKError> featureSetResult = featureDetector->detect(
                     imageR,
                     detection,
                     featureSet
             );
             if (featureSetResult.isError()) {
-                vlf::log::error("Failed to create feature set. Reason: %s.", featureSetResult.what());
-                continue;
+                vlf::log::error("Failed to detect feature set. Reason: %s.", featureSetResult.what());
+                return nullptr;
             }
 
+            // Choose the best feature set.
             if (!bestFeatureSet || featureSet->getConfidence() > bestFeatureSet->getConfidence()) {
                 bestFeatureSet = featureSet;
                 bestDetectionIndex = detectionIndex;
@@ -198,11 +212,14 @@ int main(int argc, char *argv[])
             return nullptr;
         }
         vlf::log::info("Best face confidence is %0.3f.", bestFeatureSet->getConfidence());
-
         fsdk::Detection bestDetection = detections[bestDetectionIndex];
 
-        // Stage 3. Create a face descriptor.
+        // Stage 3. Create CNN face descriptor.
         fsdk::IDescriptorPtr descriptor = fsdk::acquire(descriptorFactory->createDescriptor(fsdk::DT_CNN));
+        if (!descriptor) {
+            vlf::log::error("Failed to create face descrtiptor instance.");
+            return nullptr;
+        }
 
         vlf::log::info("Extracting descriptor.");
 
@@ -245,7 +262,7 @@ int main(int argc, char *argv[])
     }
 
     similarity = descriptorMatcherResult.getValue().similarity;
-    vlf::log::info("Derscriptors matched with score: %1.1f%%", similarity * 100.f);
+    vlf::log::info("Derscriptors matched with score: %1.1f%%.", similarity * 100.f);
 
     // Check if similarity is above theshold.
     if (similarity > threshold)
