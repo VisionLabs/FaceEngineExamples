@@ -9,9 +9,9 @@
 set(FSDK_ROOT "$ENV{FSDKDIR}" CACHE PATH "Vision Labs Face SDK root directory.")
 
 if (WIN32)
-    option(FSDK_FIND_VLF ON)
+    set(FSDK_FIND_VLF ON CACHE BOOL "Find FSDK vlf library.")
 else ()
-    option(FSDK_FIND_VLF OFF)
+    set(FSDK_FIND_VLF OFF CACHE BOOL "Find FSDK vlf library.")
 endif ()
 
 # Look for headers.
