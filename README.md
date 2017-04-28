@@ -18,31 +18,31 @@ Linux families (RHEL, CentOS, Fedora).
 From fsdk root.
 ```
 $ mkdir build && cd build
-$ cmake -DFSDK_ROOT=.. ../FaceEngineExamples
+$ cmake -DFSDK_ROOT=.. ../LUNASDKExamples
 ```
 
 ## Run examples
 Note: data folder must be at <fsdk_root>/data on Windows and on Linux.
 ```
-$ build/example1/Example1 FaceEngineExamples/images/Cameron_Diaz.ppm \
-> FaceEngineExamples/images/Cameron_Diaz_2.ppm 0.7
+$ build/example1/Example1 LUNASDKExamples/images/Cameron_Diaz.ppm \
+> LUNASDKExamples/images/Cameron_Diaz_2.ppm 0.7
 
-$ build/example1/Example1 FaceEngineExamples/images/Cameron_Diaz.ppm \
-> FaceEngineExamples/images/Jennifer_Aniston.ppm 0.7
+$ build/example1/Example1 LUNASDKExamples/images/Cameron_Diaz.ppm \
+> LUNASDKExamples/images/Jennifer_Aniston.ppm 0.7
 
-$ build/example2/Example2 FaceEngineExamples/images/portrait.ppm
+$ build/example2/Example2 LUNASDKExamples/images/portrait.ppm
 
-$ build/example3/Example3 FaceEngineExamples/images/portrait.ppm
+$ build/example3/Example3 LUNASDKExamples/images/portrait.ppm
 
-$ build/example4/Example4 FaceEngineExamples/images/Cameron_Diaz.jpg
+$ build/example4/Example4 LUNASDKExamples/images/Cameron_Diaz.jpg
 
-$ build/example5/Example5 FaceEngineExamples/images/Jennifer_Aniston.jpg
+$ build/example5/Example5 LUNASDKExamples/images/Jennifer_Aniston.jpg
 
-$ build/example6/Example6 FaceEngineExamples/images/Cameron_Diaz.ppm \
-> FaceEngineExamples/images/ FaceEngineExamples/images_lists/list.txt 0.7
+$ build/example6/Example6 LUNASDKExamples/images/Cameron_Diaz.ppm \
+> LUNASDKExamples/images/ LUNASDKExamples/images_lists/list.txt 0.7
 
-$ build/example3/Example7 FaceEngineExamples/images/portrait.ppm
+$ build/example3/Example7 LUNASDKExamples/images/portrait.ppm
 
-$ build/example8/Example8 FaceEngineExamples/descriptors/Cameron_Diaz.xpk \
-> FaceEngineExamples/descriptors/Cameron_Diaz_2.xpk 0.7
+$ build/example8/Example8 LUNASDKExamples/descriptors/Cameron_Diaz.xpk \
+> LUNASDKExamples/descriptors/Cameron_Diaz_2.xpk 0.7
 ```
