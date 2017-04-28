@@ -38,6 +38,9 @@ int main(int argc, char *argv[])
     // Number of required nearest neighbors.
     const int numberNearestNeighbors = 3;
 
+	// Number of matching result.
+	const int numberMatchingResult = 6;
+
     // Parse command line arguments.
     // Arguments:
     // 1) path to a image,
@@ -139,7 +142,7 @@ int main(int argc, char *argv[])
 
     // Create CNN face descriptor batch.
     fsdk::IDescriptorBatchPtr descriptorBatch =
-            fsdk::acquire(descriptorFactory->createDescriptorBatch(fsdk::DT_CNN, imagesList.size()));
+            fsdk::acquire(descriptorFactory->createDescriptorBatch(fsdk::DT_CNN, static_cast<int>(imagesList.size())));
     if (!descriptorBatch) {
         vlf::log::error("Failed to create face descriptor batch instance.");
         return -1;
@@ -204,7 +207,7 @@ int main(int argc, char *argv[])
     );
 
     // Match descriptor and descriptor batch.
-    fsdk::MatchingResult matchingResult[imagesList.size()];
+    fsdk::MatchingResult matchingResult[numberMatchingResult];
     fsdk::Result<fsdk::FSDKError> descriptorMatcherResult =
             descriptorMatcher->match(
                     descriptor,
