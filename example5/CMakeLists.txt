@@ -12,12 +12,13 @@ include_directories(${FSDK_INCLUDE_DIRS})
 ###### QT
 # Set CMake paths for Qt modules
 set(QT5_CMAKES CACHE PATH "QT5 Cmake files (qtbase/lib/cmake)")
-
 set(CMAKE_PREFIX_PATH ${QT5_CMAKES})
-
 if(CMAKE_PREFIX_PATH STREQUAL "")
     message(FATAL_ERROR "Must provide qt5 cmake files directory. It's qtbase/lib/cmake in wherever you have qt5")
 endif()
+
+# Find includes in corresponding build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Instruct CMake to run moc automatically when needed
 set(CMAKE_AUTOMOC ON)

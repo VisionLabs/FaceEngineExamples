@@ -26,7 +26,7 @@ We present a rather rich face processing pipeline. In fact, it is a bit too rich
 sample, but it was made so intentionally to give you a clue of some real world usage scenarios.
 
 ### Stage 0. Preparations
-SDK initialization is done in one function ```initFaceEngine```. It is pretty straightforward
+SDK initialization. It is pretty straightforward
 and self-explanatory, so we will not discuss it here.
 
 ### Stage 1. Face detection
@@ -34,24 +34,21 @@ This stage is implemented in ```extractDescriptor``` function.
 At this stage we have an image. Presumably, there is a face somewhere in it and we would
 like to find it. For that purpose, a face detector is used. We use it like so:
 ```C++
-   // We assume no more than 10 faces per image.
-   enum { MaxDetections = 10 };
+    // Detect no more than 10 faces in the image.
+    enum { MaxDetections = 10 };
+    fsdk::Detection detections[MaxDetections];
+    int detectionsCount(MaxDetections);
 
-   Detection detections[MaxDetections];
-   int detectionCount(MaxDetections);
-
-   // Detect up to 10 faces.
-   // detectionCount will store actual number of faces found.
-   if(auto r = g_faceDetector->detect(imageR, imageR.getRect(), &detections[0], &detectionCount)) {
-      if(detectionCount) {
-        // Got at least one face...
-      }
-      else {
-        // No faces found...
-      }
-    }
-    else {
-      // Some error ocurred. Find out what happened via r.what()...
+    // Detect faces in the image.
+    fsdk::Result<fsdk::FSDKError> detectorResult = faceDetector->detect(
+            imageR,
+            imageR.getRect(),
+            &detections[0],
+            &detectionsCount
+    );
+    if (detectorResult.isError()) {
+        vlf::log::error("Failed to detect face detection. Reason: %s.", detectorResult.what());
+        return nullptr;
     }
 ```
 As the result we know whether we could detect faces (and how many of them) and what prevented us
@@ -65,17 +62,23 @@ We detect facial features (often called landmarks). We need these landmarks for 
 
 We use feature detector like so for all face detections:
 ```C++
-    // Create a feature set.
-    auto featureSet = acquire(g_featureFactory->createFeatureSet());
+    // Create feature set.
+    fsdk::IFeatureSetPtr featureSet = fsdk::acquire(featureFactory->createFeatureSet());
+    if (!featureSet) {
+        vlf::log::error("Failed to create face feature set instance.");
+        return nullptr;
+    }
 
-    // Now fill it with data...
-    if(auto r = g_featureDetector->detect(imageR, detections[detectionIndex], featureSet)) {
-       // Got a feature set...
+    // Detect feature set.
+    fsdk::Result<fsdk::FSDKError> featureSetResult = featureDetector->detect(
+            imageR,
+            detection,
+            featureSet
+    );
+    if (featureSetResult.isError()) {
+        vlf::log::error("Failed to detect feature set. Reason: %s.", featureSetResult.what());
+        return nullptr;
     }
-    else {
-      // Well, that's not good...
-    }
- }
 ```
 
 ### Stage 3. Descriptor extraction
@@ -85,30 +88,43 @@ for comparison or *matching*. Such data is contained in descriptor object. A des
 extracted form an image using face detection and landmarks coordinates. Later, one or multiple
 descriptors can be matched to determine face similarity.
 ```C++
-    // Create a face descriptor.
-    auto descriptor = acquire(g_descriptorFactory->createDescriptor(DT_DEFAULT));
-
-    // Extract usable data.
-    if(auto r = g_descriptorExtractor->extract(imageBGR, bestDetection, bestFeatureSet, descriptor)) {
-        // Okay...
+    // Create CNN face descriptor.
+    fsdk::IDescriptorPtr descriptor = fsdk::acquire(descriptorFactory->createDescriptor(fsdk::DT_CNN));
+    if (!descriptor) {
+        vlf::log::error("Failed to create face descrtiptor instance.");
+        return nullptr;
     }
-    else {
-        // Failed...
+
+    // Extract face descriptor.
+    // This is typically the most time consuming task.
+    fsdk::Result<fsdk::FSDKError> descriptorExtractorResult = descriptorExtractor->extract(
+            imageBGR,
+            bestDetection,
+            bestFeatureSet,
+            descriptor
+    );
+    if(descriptorExtractorResult.isError()) {
+        vlf::log::error("Failed to extract face descriptor. Reason: %s.", descriptorExtractorResult.what());
+        return nullptr;
     }
 ```
 
 ### Stage 4. Descriptor matching
-This stage is implemented in ```matchDescriptors``` function.
 This stage is pretty simple. We match two descriptors and see how similar they are.
 For that we use a descriptor matcher object.
 ```C++
-   if(auto r = g_descriptorMatcher->match(first, second)) {
-      // Okay, now get similarity.
-      similarity = r.getValue().similarity;
-   }
-   else {
-      // Could no match....
-   }
+    // Match 2 descriptors.
+    // Returns similarity in range (0..1],
+    // where: 0 means totally different.
+    //        1 means totally the same.
+    fsdk::ResultValue<fsdk::FSDKError, fsdk::MatchingResult> descriptorMatcherResult =
+            descriptorMatcher->match(descriptor1, descriptor2);
+    if (descriptorMatcherResult.isError()) {
+        vlf::log::error("Failed to match. Reason: %s.", descriptorMatcherResult.what());
+        return -1;
+    }
+
+    similarity = descriptorMatcherResult.getValue().similarity;
 ```
 *Similarity* score tells how similar these descriptors are. It's value is in (0..1] range.
 Values near 1 tell us that the descriptors are very similar.

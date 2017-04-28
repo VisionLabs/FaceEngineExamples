@@ -22,26 +22,27 @@ To get familiar with FSDK usage and common practices, please go through Example 
 ./Example5 <some_image>
 
 ## Example output
+Warped images with faces, image with face detection and marked detection points.
 ```
 Detection 1
 Rect: x=201 y=160 w=66 h=89
 Quality estimated
-Quality: 0.438538
+Quality: 0.979267
 Complex attributes estimated
-Gender: 0.024827 (1 - man, 0 - woman)
-Natural skin color: 0.991126 (1 - natural color of skin, 0 - not natural color of skin color)
-Over exposed: 0.000221025 (1 - image is overexposed, 0 - image isn't overexposed)
-Wear glasses: 0.00112553 (1 - person wears glasses, 0 - person doesn't wear glasses)
-Age: 24.9036 (in years)
+Gender: 0.00671071 (1 - man, 0 - woman)
+Natural skin color: 0.994203 (1 - natural color of skin, 0 - not natural color of skin color)
+Over exposed: 0.000141749 (1 - image is overexposed, 0 - image isn't overexposed)
+Wear glasses: 3.98217e-05 (1 - person wears glasses, 0 - person doesn't wear glasses)
+Age: 16.6324 (in years)
 
 Detection 2
 Rect: x=280 y=423 w=72 h=97
 Quality estimated
-Quality: 0.24602
+Quality: 0.978351
 Complex attributes estimated
-Gender: 0.998334 (1 - man, 0 - woman)
-Natural skin color: 0.984857 (1 - natural color of skin, 0 - not natural color of skin color)
-Over exposed: 0.000181418 (1 - image is overexposed, 0 - image isn't overexposed)
-Wear glasses: 0.000274767 (1 - person wears glasses, 0 - person doesn't wear glasses)
-Age: 23.3166 (in years)
+Gender: 0.999703 (1 - man, 0 - woman)
+Natural skin color: 0.992363 (1 - natural color of skin, 0 - not natural color of skin color)
+Over exposed: 0.000166408 (1 - image is overexposed, 0 - image isn't overexposed)
+Wear glasses: 2.47389e-05 (1 - person wears glasses, 0 - person doesn't wear glasses)
+Age: 21.8263 (in years)
 ```

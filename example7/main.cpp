@@ -2,6 +2,9 @@
 #include <vlf/Log.h>
 
 #include <iostream>
+#include <vector>
+
+#include "io_util.h"
 
 int main(int argc, char *argv[])
 {
@@ -59,7 +62,7 @@ int main(int argc, char *argv[])
         vlf::log::error("Failed to create face feature factory instance.");
         return -1;
     }
-
+    
     // Create descriptor factory.
     fsdk::IDescriptorFactoryPtr descriptorFactory = fsdk::acquire(faceEngine->createDescriptorFactory());
     if (!descriptorFactory) {
@@ -74,30 +77,10 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // Create estimator factory.
-    fsdk::IEstimatorFactoryPtr estimatorFactory = fsdk::acquire(faceEngine->createEstimatorFactory());
-    if (!estimatorFactory) {
-        vlf::log::error("Failed to create face estimator factory instance.");
-        return -1;
-    }
-
-    // Create complex estimator.
-    fsdk::IComplexEstimatorPtr complexEstimator =
-            fsdk::acquire(static_cast<fsdk::IComplexEstimator*>(
-                    estimatorFactory->createEstimator(fsdk::ET_COMPLEX)
-            ));
-    if (!complexEstimator) {
-        vlf::log::error("Failed to create face complex estimator instance.");
-        return -1;
-    }
-
-    // Create quality estimator.
-    fsdk::IQualityEstimatorPtr qualityEstimator =
-            fsdk::acquire(static_cast<fsdk::IQualityEstimator*>(
-                    estimatorFactory->createEstimator(fsdk::ET_QUALITY)
-            ));
-    if (!qualityEstimator) {
-        vlf::log::error("Failed to create face quality estimator instance.");
+    // Create CNN descriptor extractor.
+    fsdk::IDescriptorExtractorPtr descriptorExtractor = fsdk::acquire(descriptorFactory->createExtractor(fsdk::DT_CNN));
+    if (!descriptorExtractor) {
+        vlf::log::error("Failed to create face descriptor extractor instance.");
         return -1;
     }
 
@@ -107,6 +90,8 @@ int main(int argc, char *argv[])
         vlf::log::error("Failed to load image: \"%s\".", imagePath);
         return -1;
     }
+    fsdk::Image imageBGR;
+    image.convert(imageBGR, fsdk::Format::B8G8R8);
 
     vlf::log::info("Detecting faces.");
 
@@ -118,7 +103,7 @@ int main(int argc, char *argv[])
 	int detectionsCount(MaxDetections);
 	fsdk::IMTCNNDetector::Landmarks landmarks[MaxDetections];
 
-    // Detect faces in the image.
+    // Detect faces on the photo.
     fsdk::ResultValue<fsdk::FSDKError, int> detectorResult =
             detector.as<fsdk::IMTCNNDetector>()->detect(
                     image,
@@ -136,14 +121,21 @@ int main(int argc, char *argv[])
 
     // Feature set.
     fsdk::IFeatureSetPtr featureSet(nullptr);
+    
+    // Face descriptor.
+    fsdk::IDescriptorPtr descriptor(nullptr);
+    
+    // Create CNN face descriptor batch.
+    fsdk::IDescriptorBatchPtr descriptorBatch =
+            fsdk::acquire(descriptorFactory->createDescriptorBatch(fsdk::DT_CNN, detectionsCount));
+    if (!descriptorBatch) {
+        vlf::log::error("Failed to create face descriptor batch instance.");
+        return -1;
+    }
 
     // Loop through all the faces.
     for (int detectionIndex = 0; detectionIndex < detectionsCount; ++detectionIndex) {
 	    fsdk::Detection &detection = detections[detectionIndex];
-
-	    std::cout << "Detection " << detectionIndex + 1 << "\n"
-	            << "Rect: x=" << detection.rect.x << " y=" << detection.rect.y
-                << " w=" << detection.rect.width << " h=" << detection.rect.height << std::endl;
 
         // Estimate confidence score of face detection.
         if (detection.score < confidenceThreshold) {
@@ -162,41 +154,69 @@ int main(int argc, char *argv[])
         fsdk::Image warp;
         fsdk::Result<fsdk::FSDKError> warperResult = warper->warp(image, detection, featureSet, warp);
         if (warperResult.isError()) {
-            vlf::log::error("Failed to create warped face. Reason: %s.", warperResult.what());
+            vlf::log::error("Failed to create warp. Reason: %s.", warperResult.what());
             return -1;
         }
 
         // Save warped face.
         warp.saveAsPPM(("warp_" + std::to_string(detectionIndex) + ".ppm").c_str());
         
-        // Get quality estimate.
-        float qualityOut;
-        fsdk::Result<fsdk::FSDKError> qualityEstimatorResult = qualityEstimator->estimate(warp, &qualityOut);
-        if(qualityEstimatorResult.isError()) {
-            vlf::log::error("Failed to create quality estimating. Reason: %s.", qualityEstimatorResult.what());
+        // Create face descriptor.
+        descriptor = fsdk::acquire(descriptorFactory->createDescriptor(fsdk::DT_CNN));
+        if (!descriptor) {
+            vlf::log::error("Failed to create face descriptor instance.");
             return -1;
         }
-        std::cout << "Quality estimated\nQuality: " << qualityOut << std::endl;
 
-        // Get complex estimate.
-        fsdk::ComplexEstimation complexEstimationOut;
-        fsdk::Result<fsdk::FSDKError> complexEstimatorResult =
-                complexEstimator->estimate(warp, complexEstimationOut);
-        if(complexEstimatorResult.isError()) {
-            vlf::log::error("Failed to create complex estimator. Reason: %s.", complexEstimatorResult.what());
+        vlf::log::info("Extracting descriptor (%d/%d).", (detectionIndex + 1), detectionsCount);
+
+        // Extract face descriptor.
+        fsdk::Result<fsdk::FSDKError> descriptorExtractorResult = descriptorExtractor->extract(
+                imageBGR,
+                detection,
+                featureSet,
+                descriptor
+        );
+        if (descriptorExtractorResult.isError()) {
+            vlf::log::error("Failed to extract face descriptor. Reason: %s.", descriptorExtractorResult.what());
             return -1;
         }
-        std::cout << "Complex attributes estimated\n"
-                "Gender: " << complexEstimationOut.gender << " (1 - man, 0 - woman)\n"
-                "Natural skin color: " << complexEstimationOut.naturSkinColor
-                << " (1 - natural color of skin, 0 - not natural color of skin color)\n"
-                "Over exposed: " << complexEstimationOut.overExposed
-                << " (1 - image is overexposed, 0 - image isn't overexposed)\n"
-                "Wear glasses: " << complexEstimationOut.wearGlasses
-                << " (1 - person wears glasses, 0 - person doesn't wear glasses)\n"
-                "Age: " << complexEstimationOut.age
-                << " (in years)\n"
-                << std::endl;
+
+        vlf::log::info("Saving descriptor (%d/%d).", (detectionIndex + 1), detectionsCount);
+
+        // Save face descriptor.
+        std::vector<uint8_t> data;
+        VectorArchive vectorArchive(data);
+        if (!descriptor->save(&vectorArchive)) {
+            vlf::log::error("Failed to save face descriptor to vector.");
+        }
+        if (!writeFile("descriptor_" + std::to_string(detectionIndex) + ".xpk", data)) {
+            vlf::log::error("Failed to save face descritpor to file.");
+            return -1;
+        }
+
+        vlf::log::info("Adding descriptor to descriptor barch (%d/%d).", (detectionIndex + 1), detectionsCount);
+
+        // Add descriptor to descriptor barch.
+        fsdk::Result<fsdk::DescriptorBatchError> descriptorBatchAddResult = descriptorBatch->add(descriptor);
+        if (descriptorBatchAddResult.isError()) {
+            vlf::log::error("Failed to add descriptor to descriptor batch.");
+            return -1;
+        }
+    }
+
+    vlf::log::info("Saving descriptor barch.");
+
+    // Save descriptor batch.
+    std::vector<uint8_t> data;
+    VectorArchive vectorArchive(data);
+    if (!descriptorBatch->save(&vectorArchive)) {
+        vlf::log::error("Failed to save descritpor batch to vector.");
+        return -1;
+    }
+    if (!writeFile("descriptor_batch.xpk", data)) {
+        vlf::log::error("Failed to save descritpor batch to file.");
+        return -1;
     }
 
     return 0;

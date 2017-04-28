@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(Examples)
+project(FaceEngineExamples)
 
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
@@ -15,15 +15,12 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 if (MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS -DNOMINMAX)
 else ()
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif ()
 
 option(WITH_FREEIMAGE_EXAMPLE "Built example with freeimage library." ON)
 option(WITH_QT_EXAMPLE "Built example with qt library." OFF)
-
-if (WIN32)
-    set(FSDK_FIND_VLF ON CACHE BOOL "Find FSDK vlf library.")
-endif ()
 
 add_subdirectory(example1)
 add_subdirectory(example2)
@@ -34,3 +31,6 @@ endif ()
 if (WITH_QT_EXAMPLE)
     add_subdirectory(example5)
 endif ()
+add_subdirectory(example6)
+add_subdirectory(example7)
+add_subdirectory(example8)
