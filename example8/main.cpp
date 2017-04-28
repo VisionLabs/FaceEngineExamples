@@ -9,12 +9,12 @@
 int main(int argc, char *argv[])
 {
     // Parse command line arguments.
-    // We expect 3 of them:
-    // 1) path to a first descriptor to match
-    // 2) path to a second descriptor to match
-    // 3) matching threshold
-    // If matching score is above the threshold, we will conclude that both images
-    // are of the same person. Otherwise, they're different.
+    // Arguments:
+    // 1) path to a first descriptor,
+    // 2) path to a second descriptor,
+    // 3) matching threshold.
+    // If matching score is above the threshold, then both descriptors
+    // belong to the same person, otherwise they belong to different persons.
     if(argc != 4) {
         std::cout << "Usage: "<<  argv[0] << " <descriptor1> <descriptor2> <threshold>\n"
                 " *descriptor1 - path to first descriptor\n"
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     fsdk::ISettingsProviderPtr config;
     config = fsdk::acquire(fsdk::createSettingsProvider("./data/faceengine.conf"));
     if (!config) {
-        vlf::log::error("Failed to load face engine config.");
+        vlf::log::error("Failed to load face engine config instance.");
         return -1;
     }
 
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // Match the descriptors and determine similarity.
+    // Descriptors similarity.
     float similarity;
 
     // Match 2 descriptors.
@@ -107,9 +107,9 @@ int main(int argc, char *argv[])
 
     // Check if similarity is above theshold.
     if (similarity > threshold)
-        std::cout << "These persons look the same." << std::endl;
+        std::cout << "Descriptors belong to one person." << std::endl;
     else
-        std::cout << "These persons appear different." << std::endl;
+        std::cout << "Descriptors belong to different persons." << std::endl;
 
     return 0;
 }

@@ -19,5 +19,5 @@ To get familiar with FSDK usage and common practices, please go through Example 
 
 ## Example output
 ```
-These persons look the same.
+Descriptors belong to one person.
 ```

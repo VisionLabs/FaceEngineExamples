@@ -8,7 +8,11 @@
 # By default FSDKDIR environment variable value is taken.
 set(FSDK_ROOT "$ENV{FSDKDIR}" CACHE PATH "Vision Labs Face SDK root directory.")
 
-option(FSDK_FIND_VLF OFF)
+if (WIN32)
+    option(FSDK_FIND_VLF ON)
+else ()
+    option(FSDK_FIND_VLF OFF)
+endif ()
 
 # Look for headers.
 find_path(FSDK_INCLUDE_DIRS

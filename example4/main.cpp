@@ -16,12 +16,11 @@ fsdk::Image convertImage(FIBITMAP *sourceImage);
 int main(int argc, char *argv[])
 {
     // Facial feature detection confidence threshold.
-    // We use this value to reject bad face detections.
     const float confidenceThreshold = 0.25f;
 
     // Parse command line arguments.
-    // We expect 1 of them:
-    // 1) path to a image
+    // Arguments:
+    // 1) path to a first image.
     if (argc != 2) {
         std::cout << "USAGE: " << argv[0] << " <image>\n"
                 " *image - path to image\n"
@@ -36,7 +35,7 @@ int main(int argc, char *argv[])
     fsdk::ISettingsProviderPtr config;
     config = fsdk::acquire(fsdk::createSettingsProvider("./data/faceengine.conf"));
     if (!config) {
-        vlf::log::error("Failed to load face engine config.");
+        vlf::log::error("Failed to load face engine config instance.");
         return -1;
     }
 
@@ -142,7 +141,9 @@ int main(int argc, char *argv[])
     FreeImage_DeInitialise();
 #endif
 
-    // We assume no more than 10 faces per image.
+    vlf::log::info("Detecting faces.");
+
+    // Detect no more than 10 faces in the image.
     enum { MaxDetections = 10 };
 
     // Data used for MTCNN detection.
@@ -150,7 +151,7 @@ int main(int argc, char *argv[])
 	int detectionsCount(MaxDetections);
 	fsdk::IMTCNNDetector::Landmarks landmarks[MaxDetections];
 
-    // Detect faces on the photo.
+    // Detect faces in the image.
     fsdk::ResultValue<fsdk::FSDKError, int> detectorResult =
             detector.as<fsdk::IMTCNNDetector>()->detect(
                     image,
@@ -164,7 +165,7 @@ int main(int argc, char *argv[])
         return -1;
     }
     detectionsCount = detectorResult.getValue();
-    vlf::log::info("Detections found: %d.", detectionsCount);
+    vlf::log::info("Found %d face(s).", detectionsCount);
 
     // Feature set.
     fsdk::IFeatureSetPtr featureSet(nullptr);

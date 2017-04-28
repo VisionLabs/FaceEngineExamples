@@ -9,12 +9,12 @@
 int main(int argc, char *argv[])
 {
     // Facial feature detection confidence threshold.
-    // We use this value to reject bad face detections.
     const float confidenceThreshold = 0.25f;
 
     // Parse command line arguments.
-    // We expect 1 of them:
-    // 1) path to a image
+    // Arguments:
+    // 1) path to a first image.
+    // Image should be in ppm format.
     if (argc != 2) {
         std::cout << "USAGE: " << argv[0] << " <image>\n"
                 " *image - path to image\n"
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     fsdk::ISettingsProviderPtr config;
     config = fsdk::acquire(fsdk::createSettingsProvider("./data/faceengine.conf"));
     if (!config) {
-        vlf::log::error("Failed to load face engine config.");
+        vlf::log::error("Failed to load face engine config instance.");
         return -1;
     }
 
@@ -93,7 +93,9 @@ int main(int argc, char *argv[])
     fsdk::Image imageBGR;
     image.convert(imageBGR, fsdk::Format::B8G8R8);
 
-    // We assume no more than 10 faces per image.
+    vlf::log::info("Detecting faces.");
+
+    // Detect no more than 10 faces in the image.
     enum { MaxDetections = 10 };
 
     // Data used for MTCNN detection.
@@ -115,7 +117,7 @@ int main(int argc, char *argv[])
         return -1;
     }
     detectionsCount = detectorResult.getValue();
-    vlf::log::info("Detections found: %d.", detectionsCount);
+    vlf::log::info("Found %d face(s).", detectionsCount);
 
     // Feature set.
     fsdk::IFeatureSetPtr featureSet(nullptr);
@@ -123,11 +125,11 @@ int main(int argc, char *argv[])
     // Face descriptor.
     fsdk::IDescriptorPtr descriptor(nullptr);
     
-    // Create descriptor batch.
+    // Create CNN face descriptor batch.
     fsdk::IDescriptorBatchPtr descriptorBatch =
             fsdk::acquire(descriptorFactory->createDescriptorBatch(fsdk::DT_CNN, detectionsCount));
     if (!descriptorBatch) {
-        vlf::log::error("Failed to create descriptor batch instance.");
+        vlf::log::error("Failed to create face descriptor batch instance.");
         return -1;
     }
 
@@ -166,6 +168,8 @@ int main(int argc, char *argv[])
             return -1;
         }
 
+        vlf::log::info("Extracting descriptor (%d/%d).", (detectionIndex + 1), detectionsCount);
+
         // Extract face descriptor.
         fsdk::Result<fsdk::FSDKError> descriptorExtractorResult = descriptorExtractor->extract(
                 imageBGR,
@@ -177,7 +181,9 @@ int main(int argc, char *argv[])
             vlf::log::error("Failed to extract face descriptor. Reason: %s.", descriptorExtractorResult.what());
             return -1;
         }
-        
+
+        vlf::log::info("Saving descriptor (%d/%d).", (detectionIndex + 1), detectionsCount);
+
         // Save face descriptor.
         std::vector<uint8_t> data;
         VectorArchive vectorArchive(data);
@@ -188,7 +194,9 @@ int main(int argc, char *argv[])
             vlf::log::error("Failed to save face descritpor to file.");
             return -1;
         }
-        
+
+        vlf::log::info("Adding descriptor to descriptor barch (%d/%d).", (detectionIndex + 1), detectionsCount);
+
         // Add descriptor to descriptor barch.
         fsdk::Result<fsdk::DescriptorBatchError> descriptorBatchAddResult = descriptorBatch->add(descriptor);
         if (descriptorBatchAddResult.isError()) {
@@ -196,7 +204,9 @@ int main(int argc, char *argv[])
             return -1;
         }
     }
-    
+
+    vlf::log::info("Saving descriptor barch.");
+
     // Save descriptor batch.
     std::vector<uint8_t> data;
     VectorArchive vectorArchive(data);
