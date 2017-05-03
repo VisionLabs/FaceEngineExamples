@@ -24,25 +24,30 @@ $ cmake -DFSDK_ROOT=.. ../examples
 ## Run examples
 Note: data folder must be at <fsdk_root>/data on Windows and on Linux.
 ```
-$ build/example1/Example1 examples/images/Cameron_Diaz.ppm \
-> examples/images/Cameron_Diaz_2.ppm 0.7
+$ build/example1/Example1 examples/images/Cameron_Diaz.ppm examples/images/Cameron_Diaz_2.ppm 0.7
 
-$ build/example1/Example1 examples/images/Cameron_Diaz.ppm \
-> examples/images/Jennifer_Aniston.ppm 0.7
+$ build/example1/Example1 examples/images/Cameron_Diaz.ppm examples/images/Jennifer_Aniston.ppm 0.7
 
 $ build/example2/Example2 examples/images/portrait.ppm
 
 $ build/example3/Example3 examples/images/portrait.ppm
 
 $ build/example4/Example4 examples/images/Cameron_Diaz.jpg
-
-$ build/example5/Example5 examples/images/Jennifer_Aniston.jpg
-
-$ build/example6/Example6 examples/images/Cameron_Diaz.ppm \
-> examples/images/ examples/images_lists/list.txt 0.7
+ 
+$ build/example6/Example6 examples/images/Cameron_Diaz.ppm examples/images/ examples/images_lists/list.txt 0.7
 
 $ build/example3/Example7 examples/images/portrait.ppm
 
-$ build/example8/Example8 examples/descriptors/Cameron_Diaz.xpk \
-> examples/descriptors/Cameron_Diaz_2.xpk 0.7
+$ build/example8/Example8 examples/descriptors/Cameron_Diaz.xpk examples/descriptors/Cameron_Diaz_2.xpk 0.7
+```
+
+## Qt example
+**Build with Qt example (from FSDK_ROOT/build):**
+```
+$ cmake -DFSDK_ROOT=.. -DWITH_QT_EXAMPLE=ON ../examples
+```
+If Qt is installed in non-system directory and can't be found by cmake automaticly, you also need to specify path Qt.
+**Run Qt example:**
+```
+$ build/example5/Example5 examples/images/Jennifer_Aniston.jpg
 ```
