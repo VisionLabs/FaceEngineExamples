@@ -1,13 +1,13 @@
 # Example 2
 ## What it does
-This example demonstrates how to estimate a face quality on an image and to detect attributes on an face.
+This example demonstrates how to estimate a face quality on an image and to detect attributes on a face.
 
 ## Prerequisites
 *As said in the introduction page, this repository doesn't provide SDK headers, libraries and tools;
 you have to obtain them from VisionLabs.*
 
 This example assumes that you have read the **FaceEngine Handbook** already (or at least have it
-somewhere nearby for reference) and know some core concepts, like memory management,
+somewhere nearby for reference) and are familiar with some core concepts, like memory management,
 object ownership and life-time control. This sample will not explain these aspects in detail.
 
 ## Example walkthrough
