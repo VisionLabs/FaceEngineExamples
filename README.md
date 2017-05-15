@@ -6,7 +6,7 @@ with SDK version 1.0 and newer.
 Contact us via email (info@visionlabs.ru) for evaluation and/or licensing terms and conditions.**
 
 Aside from examples itself, there are some supplementary materials you may find useful.
-Look into *cmake/* folder for a CMake find script for the SDK. Your are not forced to use
+Look into *cmake/* folder for a CMake find script for the SDK. You are not forced to use
 CMake but we advise for it.
 
 Currently we support 64 bit Windows and Linux. On Windows everything should work with
@@ -46,7 +46,13 @@ $ build/example8/Example8 examples/descriptors/Cameron_Diaz.xpk examples/descrip
 ```
 $ cmake -DFSDK_ROOT=.. -DWITH_QT_EXAMPLE=ON ../examples
 ```
-If Qt is installed in non-system directory and can't be found by cmake automaticly, you also need to specify path Qt.
+
+If Qt is installed in non-system directory and can't be found by cmake automatically, you also need to specify path to Qt.
+**Example:**
+```
+$ cmake -DFSDK_ROOT=.. -DWITH_QT_EXAMPLE=ON -DQt5Core_DIR=/usr/lib64/cmake/Qt5Core -DQt5Gui_DIR=/usr/lib64/cmake/Qt5Gui -DQt5_DIR=/usr/lib64/cmake/Qt5 ../examples
+```
+
 **Run Qt example:**
 ```
 $ build/example5/Example5 examples/images/Jennifer_Aniston.jpg

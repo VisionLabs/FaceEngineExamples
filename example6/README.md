@@ -8,7 +8,7 @@ use it to find the nearest neighbors with subsequent matches.
 libraries and tools; you have to obtain them from VisionLabs.*
 
 This example assumes that you have read the **FaceEngine Handbook** already
-(or at least have it somewhere nearby for reference) and are familar with some core concepts,
+(or at least have it somewhere nearby for reference) and are familiar with some core concepts,
 like memory management, object ownership and life-time control. This sample will not explain
 these aspects in detail.
 
