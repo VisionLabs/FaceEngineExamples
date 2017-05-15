@@ -256,8 +256,8 @@ fsdk::Image convertImage(const QImage &sourceImage) {
     );
 
     // Do not rely on Qt image format conversion.
-    // This code isn't very fast but does the right
-    // thing in all cases.
+    // This code does not work very fast,
+    // but in all cases it is correct.
     // Nb: this code was added due to several images
     // being fucked up during conversion to _RGB888.
     // Qt version in question is 5.1.1.

@@ -46,7 +46,7 @@ $ build/example8/Example8 examples/descriptors/Cameron_Diaz.xpk examples/descrip
 ```
 $ cmake -DFSDK_ROOT=.. -DWITH_QT_EXAMPLE=ON ../examples
 ```
-If Qt is installed in non-system directory and can't be found by cmake automaticly, you also need to specify path Qt.
+If Qt is installed in non-system directory and can't be found by cmake automatically, you also need to specify path to Qt.
 **Run Qt example:**
 ```
 $ build/example5/Example5 examples/images/Jennifer_Aniston.jpg
