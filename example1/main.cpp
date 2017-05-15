@@ -286,7 +286,7 @@ fsdk::IDescriptorPtr extractDescriptor(
     }
 
     // Extract face descriptor.
-    // This is typically the most time consuming task.
+    // This is typically the most time-consuming task.
     fsdk::Result<fsdk::FSDKError> descriptorExtractorResult = descriptorExtractor->extract(
             imageBGR,
             bestDetection,
