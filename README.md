@@ -50,9 +50,7 @@ $ cmake -DFSDK_ROOT=.. -DWITH_QT_EXAMPLE=ON ../examples
 If Qt is installed in non-system directory and can't be found by cmake automatically, you also need to specify path to Qt.
 **Example:**
 ```
-Qt5Core_DIR     /usr/lib64/cmake/Qt5Core
-Qt5Gui_DIR      /usr/lib64/cmake/Qt5Gui
-Qt5_DIR         /usr/lib64/cmake/Qt5
+$ cmake -DFSDK_ROOT=.. -DWITH_QT_EXAMPLE=ON ../examples -DQt5Core_DIR=/usr/lib64/cmake/Qt5Core -DQt5Gui_DIR=/usr/lib64/cmake/Qt5Gui -DQt5_DIR=/usr/lib64/cmake/Qt5
 ```
 
 **Run Qt example:**
