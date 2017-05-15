@@ -1,7 +1,7 @@
 # Example 1
 ## What it does
-This example demonstrates how to detect a face on an image, how to extract biometry data
-of that face (so called descriptor) and how to compare two descriptors. As the result of it's work,
+This example demonstrates how to detect a face on an image, how to extract biometric data
+of that face (so called descriptor) and how to compare two descriptors. As the result of its work,
 the example program will tell you whether people shown on two images are actually the same person or not.
 It will also allow you to pick a threshold for such classification.
 
@@ -10,7 +10,7 @@ It will also allow you to pick a threshold for such classification.
 and tools; you have to obtain them from VisionLabs.*
 
 This example assumes that you have read the **FaceEngine Handbook** already
-(or at least have it somewhere nearby for reference) and are familar with some core concepts,
+(or at least have it somewhere nearby for reference) and know some core concepts,
 like memory management, object ownership and life-time control. This sample will not explain
 these aspects in detail.
 
@@ -57,7 +57,7 @@ from achieving that.
 ### Stage 2. Facial feature detection
 This stage is implemented in ```extractDescriptor``` function.
 We detect facial features (often called landmarks). We need these landmarks for two reasons:
-1. they're required to extract a face descriptor (see below)
+1. they're required to extract a face descriptor (see below),
 2. we can estimate landmarks alignment score and check if this face detection is good enough for us.
 
 We use feature detector like so for all face detections:
@@ -85,7 +85,7 @@ We use feature detector like so for all face detections:
 This stage is implemented in ```extractDescriptor``` function.
 When we have a reliable face detection, we need to extract some data from it that can be used
 for comparison or *matching*. Such data is contained in descriptor object. A descriptor may be
-extracted form an image using face detection and landmarks coordinates. Later, one or multiple
+extracted from an image using face detection and landmarks coordinates. Later, one or multiple
 descriptors can be matched to determine face similarity.
 ```C++
     // Create CNN face descriptor.
@@ -96,7 +96,7 @@ descriptors can be matched to determine face similarity.
     }
 
     // Extract face descriptor.
-    // This is typically the most time consuming task.
+    // This is typically the most time-consuming task.
     fsdk::Result<fsdk::FSDKError> descriptorExtractorResult = descriptorExtractor->extract(
             imageBGR,
             bestDetection,
@@ -126,9 +126,9 @@ For that we use a descriptor matcher object.
 
     similarity = descriptorMatcherResult.getValue().similarity;
 ```
-*Similarity* score tells how similar these descriptors are. It's value is in (0..1] range.
+*Similarity* score tells how similar these descriptors are. Its value is in (0..1] range.
 Values near 1 tell us that the descriptors are very similar.
 
 ### Putting it all together
-The ```main``` function just calls all of the above in rigth order. Aside from that it parses
+The ```main``` function just calls all the above in right order. Aside from that it parses
 command line and loads images. After all stages finish it writes the result.
