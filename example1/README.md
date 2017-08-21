@@ -40,19 +40,22 @@ like to find it. For that purpose, a face detector is used. We use it like so:
     int detectionsCount(MaxDetections);
 
     // Detect faces in the image.
-    fsdk::Result<fsdk::FSDKError> detectorResult = faceDetector->detect(
+    fsdk::ResultValue<fsdk::FSDKError, int> detectorResult = faceDetector->detect(
             imageR,
             imageR.getRect(),
             &detections[0],
-            &detectionsCount
+            detectionsCount
     );
     if (detectorResult.isError()) {
         vlf::log::error("Failed to detect face detection. Reason: %s.", detectorResult.what());
         return nullptr;
     }
+    detectionsCount = detectorResult.getValue();
 ```
 As the result we know whether we could detect faces (and how many of them) and what prevented us
 from achieving that.
+
+We recommend the use of MTCNN detector.
 
 ### Stage 2. Facial feature detection
 This stage is implemented in ```extractDescriptor``` function.

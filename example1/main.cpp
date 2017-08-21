@@ -230,6 +230,7 @@ fsdk::IDescriptorPtr extractDescriptor(
         return nullptr;
     }
     detectionsCount = detectorResult.getValue();
+
     vlf::log::info("Found %d face(s).", detectionsCount);
 
     // Stage 2. Detect facial features set and compute a confidence score.
