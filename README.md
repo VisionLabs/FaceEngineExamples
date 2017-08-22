@@ -36,7 +36,7 @@ $ build/example4/Example4 examples/images/Cameron_Diaz.jpg
  
 $ build/example6/Example6 examples/images/Cameron_Diaz.ppm examples/images/ examples/images_lists/list.txt 0.7
 
-$ build/example3/Example7 examples/images/portrait.ppm
+$ build/example7/Example7 examples/images/portrait.ppm
 
 $ build/example8/Example8 examples/descriptors/Cameron_Diaz.xpk examples/descriptors/Cameron_Diaz_2.xpk 0.7
 ```
