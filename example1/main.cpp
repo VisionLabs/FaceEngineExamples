@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
     }
 
     // Create VGG feature detector.
-    featureDetector = fsdk::acquire(featureFactory->createDetector(fsdk::FT_VGG));
+    featureDetector = fsdk::acquire(featureFactory->createDetector(fsdk::FET_VGG));
     if(!featureDetector) {
         vlf::log::error("Failed to create face feature detector instance.");
         return -1;
@@ -219,16 +219,18 @@ fsdk::IDescriptorPtr extractDescriptor(
     int detectionsCount(MaxDetections);
 
     // Detect faces in the image.
-    fsdk::Result<fsdk::FSDKError> detectorResult = faceDetector->detect(
+    fsdk::ResultValue<fsdk::FSDKError, int> detectorResult = faceDetector->detect(
             imageR,
             imageR.getRect(),
             &detections[0],
-            &detectionsCount
+            detectionsCount
     );
     if (detectorResult.isError()) {
         vlf::log::error("Failed to detect face detection. Reason: %s.", detectorResult.what());
         return nullptr;
     }
+    detectionsCount = detectorResult.getValue();
+
     vlf::log::info("Found %d face(s).", detectionsCount);
 
     // Stage 2. Detect facial features set and compute a confidence score.

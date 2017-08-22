@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     }
     
     // Create VGG feature detector.
-    fsdk::IFeatureDetectorPtr featureDetector = fsdk::acquire(featureFactory->createDetector(fsdk::FT_VGG));
+    fsdk::IFeatureDetectorPtr featureDetector = fsdk::acquire(featureFactory->createDetector(fsdk::FET_VGG));
     if (!featureDetector) {
         vlf::log::error("Failed to create face featrure detector instance.");
         return -1;
@@ -131,17 +131,18 @@ int main(int argc, char *argv[])
 	int detectionsCount(MaxDetections);
 
     // Detect faces in the image.
-    fsdk::Result<fsdk::FSDKError> detectorResult =
+    fsdk::ResultValue<fsdk::FSDKError, int> detectorResult =
             detector->detect(
                     imageR,
                     imageR.getRect(),
                     &detections[0],
-                    &detectionsCount
+                    detectionsCount
             );
     if (detectorResult.isError()) {
         vlf::log::error("Failed to detect face detection. Reason: %s.", detectorResult.what());
         return -1;
     }
+    detectionsCount = detectorResult.getValue();
     vlf::log::info("Found %d face(s).", detectionsCount);
 
     // Create feature set.
