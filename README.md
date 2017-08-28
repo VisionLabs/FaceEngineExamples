@@ -19,6 +19,7 @@ From fsdk root.
 ```
 $ mkdir build && cd build
 $ cmake -DFSDK_ROOT=.. ../examples
+$ make
 ```
 
 ## Run examples
