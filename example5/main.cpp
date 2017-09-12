@@ -258,9 +258,6 @@ fsdk::Image convertImage(const QImage &sourceImage) {
     // Do not rely on Qt image format conversion.
     // This code isn't very fast but does the right
     // thing in all cases.
-    // Nb: this code was added due to several images
-    // being fucked up during conversion to _RGB888.
-    // Qt version in question is 5.1.1.
     uchar *data = colorImage.getDataAs<uchar>();
     for (int y = 0; y < colorImage.getHeight(); ++y) {
         for(int x = 0; x < colorImage.getWidth(); ++x) {
