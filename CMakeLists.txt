@@ -19,7 +19,7 @@ else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif ()
 
-option(WITH_FREEIMAGE_EXAMPLE "Built example with freeimage library." OFF)
+option(WITH_FREEIMAGE_EXAMPLE "Built example with freeimage library." ON)
 option(WITH_QT_EXAMPLE "Built example with qt library." OFF)
 
 add_subdirectory(example1)
