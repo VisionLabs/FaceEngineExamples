@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
         vlf::log::error("Failed to load face engine config instance.");
         return -1;
     }
+    config->setValue("DescriptorFactory::Settings", "model", 45);
 
     // Create FaceEngine root SDK object.
     fsdk::IFaceEnginePtr faceEngine = fsdk::acquire(fsdk::createFaceEngine(fsdk::CFF_OMIT_SETTINGS));
