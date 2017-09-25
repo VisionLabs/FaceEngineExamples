@@ -16,7 +16,8 @@ Linux families (RHEL, CentOS, Fedora).
 
 ## Build examples
 *To build the example 4 option WITH_FREEIMAGE_EXAMPLE must be installed.
-Example 4 shows how to work with images of different formats, for example, jpeg.*
+Example 4 shows how to work with images of different formats, for example, jpeg.
+The default option WITH_FREEIMAGE_EXAMPLE is enabled.*
 
 From fsdk root.
 ```
