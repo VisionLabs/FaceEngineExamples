@@ -24,22 +24,16 @@ Rect: x=181 y=158 w=99 h=100
 Quality estimated
 Quality: 0.953474
 Complex attributes estimated
-Gender: 0.00665839 (1 - man, 0 - woman)
-Wear glasses: 4.52164e-05 (1 -wear glasses, 0 - not wear glasses)
-Natural skin color: 0.990255 (1 - natural color of skin, 0 - not natural color of skin color)
-Over exposed: 0.000135384 (1 - image is overexposed, 0 - image isn't overexposed)
-Wear glasses: 4.52164e-05 (1 - person wears glasses, 0 - person doesn't wear glasses)
-Age: 15.824 (in years)
+Gender: 0.00851618 (1 - man, 0 - woman)
+Wear glasses: 0.000833967 (1 - person wears glasses, 0 - person doesn't wear glasses)
+Age: 15.7716 (in years)
 
 Detection 2
 Rect: x=259 y=428 w=100 h=100
 Quality estimated
 Quality: 0.955808
 Complex attributes estimated
-Gender: 0.999782 (1 - man, 0 - woman)
-Wear glasses: 2.0116e-05 (1 -wear glasses, 0 - not wear glasses)
-Natural skin color: 0.982964 (1 - natural color of skin, 0 - not natural color of skin color)
-Over exposed: 0.000237708 (1 - image is overexposed, 0 - image isn't overexposed)
-Wear glasses: 2.0116e-05 (1 - person wears glasses, 0 - person doesn't wear glasses)
-Age: 20.803 (in years)
+Gender: 0.999883 (1 - man, 0 - woman)
+Wear glasses: 7.95563e-05 (1 - person wears glasses, 0 - person doesn't wear glasses)
+Age: 17.647 (in years)
 ```
