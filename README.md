@@ -15,6 +15,10 @@ Other versions may work as well. Note, that the SDK is officially supported on R
 Linux families (RHEL, CentOS, Fedora).
 
 ## Build examples
+*To build the example 4 WITH_FREEIMAGE_EXAMPLE option must be installed.
+Example 4 shows how to work with images of different formats, for example, jpeg.
+Default  WITH_FREEIMAGE_EXAMPLE option is enabled.*
+
 From fsdk root.
 ```
 $ mkdir build && cd build
