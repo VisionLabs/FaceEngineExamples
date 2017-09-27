@@ -204,10 +204,6 @@ int main(int argc, char *argv[])
         }
         std::cout << "Complex attributes estimated\n"
                 "Gender: " << complexEstimationOut.gender << " (1 - man, 0 - woman)\n"
-                "Natural skin color: " << complexEstimationOut.naturSkinColor
-                << " (1 - natural color of skin, 0 - not natural color of skin color)\n"
-                "Over exposed: " << complexEstimationOut.overExposed
-                << " (1 - image is overexposed, 0 - image isn't overexposed)\n"
                 "Wear glasses: " << complexEstimationOut.wearGlasses
                 << " (1 - person wears glasses, 0 - person doesn't wear glasses)\n"
                 "Age: " << complexEstimationOut.age

@@ -25,24 +25,20 @@ To get familiar with FSDK usage and common practices, please go through Example 
 Warped images with faces, image with face detection and marked detection points.
 ```
 Detection 1
-Rect: x=201 y=160 w=66 h=89
+Rect: x=277 y=426 w=73 h=94
 Quality estimated
-Quality: 0.979267
+Quality: 0.955808
 Complex attributes estimated
-Gender: 0.00671071 (1 - man, 0 - woman)
-Natural skin color: 0.994203 (1 - natural color of skin, 0 - not natural color of skin color)
-Over exposed: 0.000141749 (1 - image is overexposed, 0 - image isn't overexposed)
-Wear glasses: 3.98217e-05 (1 - person wears glasses, 0 - person doesn't wear glasses)
-Age: 16.6324 (in years)
+Gender: 0.999705 (1 - man, 0 - woman)
+Wear glasses: 0.000118364 (1 - person wears glasses, 0 - person doesn't wear glasses)
+Age: 17.7197 (in years)
 
 Detection 2
-Rect: x=280 y=423 w=72 h=97
+Rect: x=203 y=159 w=63 h=89
 Quality estimated
-Quality: 0.978351
+Quality: 0.955808
 Complex attributes estimated
-Gender: 0.999703 (1 - man, 0 - woman)
-Natural skin color: 0.992363 (1 - natural color of skin, 0 - not natural color of skin color)
-Over exposed: 0.000166408 (1 - image is overexposed, 0 - image isn't overexposed)
-Wear glasses: 2.47389e-05 (1 - person wears glasses, 0 - person doesn't wear glasses)
-Age: 21.8263 (in years)
+Gender: 0.0053403 (1 - man, 0 - woman)
+Wear glasses: 0.000911222 (1 - person wears glasses, 0 - person doesn't wear glasses)
+Age: 16.1504 (in years)
 ```
