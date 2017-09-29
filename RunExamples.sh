@@ -51,7 +51,7 @@ echo "======================================="
 echo ""
 
 ./build/example8/Example8 examples/descriptors/Cameron_Diaz.xpk \
-examples/descriptors/Cameron_Diaz_2.xpk
+examples/descriptors/Cameron_Diaz_2.xpk 0.7
 
 echo ""
 echo ""
