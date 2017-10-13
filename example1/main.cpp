@@ -1,16 +1,13 @@
 #include <FaceEngine.h>
-#include <vlf/Log.h>
 
 #include <iostream>
 
 // Extract face descriptor.
 fsdk::IDescriptorPtr extractDescriptor(
+        fsdk::IFaceEnginePtr faceEngine,
         fsdk::IDetectorPtr faceDetector,
-        fsdk::IFeatureFactoryPtr featureFactory,
-        fsdk::IFeatureDetectorPtr featureDetector,
-        fsdk::IDescriptorFactoryPtr descriptorFactory,
         fsdk::IDescriptorExtractorPtr descriptorExtractor,
-        const fsdk::Image &image
+        fsdk::Image &image
 );
 
 int main(int argc, char *argv[])
@@ -23,7 +20,7 @@ int main(int argc, char *argv[])
     // If matching score is above the threshold, then both images
     // belong to the same person, otherwise they belong to different persons.
     // Images should be in ppm format.
-    if(argc != 4) {
+    if (argc != 4) {
         std::cout << "Usage: "<<  argv[0] << " <image1> <image2> <threshold>\n"
                 " *image1 - path to first image\n"
                 " *image2 - path to second image\n"
@@ -35,9 +32,9 @@ int main(int argc, char *argv[])
     char *secondImagePath = argv[2];
     float threshold = (float)atof(argv[3]);
 
-    vlf::log::info("firstImagePath: \"%s\".", firstImagePath);
-    vlf::log::info("secondImagePath: \"%s\".", secondImagePath);
-    vlf::log::info("threshold: %1.3f.", threshold);
+    std::clog << "firstImagePath: \"" << firstImagePath <<"\"" << std::endl;
+    std::clog << "secondImagePath: \"" << secondImagePath << "\"" << std::endl;
+    std::clog << "threshold: " << threshold << std::endl;
 
     // Factory objects.
     // These set up various SDK components.
@@ -47,106 +44,70 @@ int main(int argc, char *argv[])
     // are properly destroyed after use.
     fsdk::ISettingsProviderPtr config;                    // Config root SDK object.
     fsdk::IFaceEnginePtr faceEngine;                      // Root SDK object.
-    fsdk::IDetectorFactoryPtr detectorFactory;            // Face detector factory.
-    fsdk::IFeatureFactoryPtr featureFactory;              // Facial feature detector factory.
-    fsdk::IDescriptorFactoryPtr descriptorFactory;        // Facial descriptor factory.
 
     // SDK components that we will use for facial recognition.
     fsdk::IDetectorPtr faceDetector;                      // Face detector.
-    fsdk::IFeatureDetectorPtr featureDetector;            // Facial feature detector.
     fsdk::IDescriptorExtractorPtr descriptorExtractor;    // Facial descriptor extractor.
     fsdk::IDescriptorMatcherPtr descriptorMatcher;        // Descriptor matcher.
 
     // Create config FaceEngine root SDK object.
     config = fsdk::acquire(fsdk::createSettingsProvider("./data/faceengine.conf"));
     if (!config) {
-        vlf::log::error("Failed to load face engine config instance.");
+        std::cerr << "Failed to load face engine config instance." << std::endl;
         return -1;
     }
 
     // Create FaceEngine root SDK object.
-    faceEngine = fsdk::acquire(fsdk::createFaceEngine(fsdk::CFF_OMIT_SETTINGS));
+    faceEngine = fsdk::acquire(fsdk::createFaceEngine());
     if (!faceEngine) {
-        vlf::log::error("Failed to create face engine instance.");
+        std::cerr << "Failed to create face engine instance." << std::endl;
         return -1;
     }
     faceEngine->setSettingsProvider(config);
     faceEngine->setDataDirectory("./data/");
 
-    // Create detector factory.
-    detectorFactory = fsdk::acquire(faceEngine->createDetectorFactory());
-    if (!detectorFactory) {
-        vlf::log::error("Failed to create face detector factory instance.");
-        return -1;
-    }
-
-    // Create feature factory.
-    featureFactory = fsdk::acquire(faceEngine->createFeatureFactory());
-    if (!featureFactory) {
-        vlf::log::error("Failed to create face feature factory instance.");
-        return -1;
-    }
-
-    // Create descriptor factory.
-    descriptorFactory = fsdk::acquire(faceEngine->createDescriptorFactory());
-    if(!descriptorFactory) {
-        vlf::log::error("Failed to create face descriptor factory instance.");
-        return -1;
-    }
-
-    // Create DPM detector.
-    faceDetector = fsdk::acquire(detectorFactory->createDetector(fsdk::ODT_DPM));
+    // Create MTCNN detector.
+    faceDetector = fsdk::acquire(faceEngine->createDetector(fsdk::ODT_MTCNN));
     if (!faceDetector) {
-        vlf::log::error("Failed to create face detector instance.");
+        std::cerr << "Failed to create face detector instance." << std::endl;
         return -1;
     }
 
-    // Create VGG feature detector.
-    featureDetector = fsdk::acquire(featureFactory->createDetector(fsdk::FET_VGG));
-    if(!featureDetector) {
-        vlf::log::error("Failed to create face feature detector instance.");
-        return -1;
-    }
-
-    // Create CNN descriptor extractor.
-    descriptorExtractor = fsdk::acquire(descriptorFactory->createExtractor(fsdk::DT_CNN));
+    // Create descriptor extractor.
+    descriptorExtractor = fsdk::acquire(faceEngine->createExtractor());
     if (!descriptorExtractor) {
-        vlf::log::error("Failed to create face descriptor extractor instance.");
+        std::cerr << "Failed to create face descriptor extractor instance." << std::endl;
         return -1;
     }
 
-    // Create CNN descriptor matcher.
-    descriptorMatcher = fsdk::acquire(descriptorFactory->createMatcher(fsdk::DT_CNN));
+    // Create descriptor matcher.
+    descriptorMatcher = fsdk::acquire(faceEngine->createMatcher());
     if (!descriptorMatcher) {
-        vlf::log::error("Failed to create face descriptor matcher instance.");
+        std::cerr << "Failed to create face descriptor matcher instance." << std::endl;
         return -1;
     }
 
     // Load images.
     fsdk::Image image1, image2;
     if (!image1.loadFromPPM(firstImagePath)) {
-        vlf::log::error("Failed to load image: \"%s\".", firstImagePath);
+        std::cerr << "Failed to load image: \"" << firstImagePath << "\"." << std::endl;
         return -1;
     }
     if (!image2.loadFromPPM(secondImagePath)) {
-        vlf::log::error("Failed to load image: \"%s\".", secondImagePath);
+        std::cerr << "Failed to load image: \"" << secondImagePath << "\"" << std::endl;
         return -1;
     }
 
     // Extract face descriptors.
     fsdk::IDescriptorPtr descriptor1 = extractDescriptor(
+            faceEngine,
             faceDetector,
-            featureFactory,
-            featureDetector,
-            descriptorFactory,
             descriptorExtractor,
             image1
     );
     fsdk::IDescriptorPtr descriptor2 = extractDescriptor(
+            faceEngine,
             faceDetector,
-            featureFactory,
-            featureDetector,
-            descriptorFactory,
             descriptorExtractor,
             image2
     );
@@ -164,12 +125,12 @@ int main(int argc, char *argv[])
     fsdk::ResultValue<fsdk::FSDKError, fsdk::MatchingResult> descriptorMatcherResult =
             descriptorMatcher->match(descriptor1, descriptor2);
     if (descriptorMatcherResult.isError()) {
-        vlf::log::error("Failed to match. Reason: %s.", descriptorMatcherResult.what());
+        std::cerr << "Failed to match. Reason: " << descriptorMatcherResult.what() << std::endl;
         return -1;
     }
 
     similarity = descriptorMatcherResult.getValue().similarity;
-    vlf::log::info("Derscriptors matched with score: %1.1f%%.", similarity * 100.f);
+    std::clog << "Derscriptors matched with score: " << similarity * 100.f << "%" << std::endl;
 
     // Check if similarity is above theshold.
     if (similarity > threshold)
@@ -181,122 +142,90 @@ int main(int argc, char *argv[])
 }
 
 fsdk::IDescriptorPtr extractDescriptor(
+        fsdk::IFaceEnginePtr faceEngine,
         fsdk::IDetectorPtr faceDetector,
-        fsdk::IFeatureFactoryPtr featureFactory,
-        fsdk::IFeatureDetectorPtr featureDetector,
-        fsdk::IDescriptorFactoryPtr descriptorFactory,
         fsdk::IDescriptorExtractorPtr descriptorExtractor,
-        const fsdk::Image &image
+        fsdk::Image &image
 ) {
     // Facial feature detection confidence threshold.
     const float confidenceThreshold = 0.25f;
 
     if (!image) {
-        vlf::log::error("Request image is invalid.");
-        return nullptr;
-    }
-
-    // Create color and grayscale images.
-    fsdk::Image imageBGR;
-    fsdk::Image imageR;
-    image.convert(imageBGR, fsdk::Format::B8G8R8);
-    image.convert(imageR, fsdk::Format::R8);
-    if (!imageBGR) {
-        vlf::log::error("Conversion to BGR has failed.");
-        return nullptr;
-    }
-    if (!imageR) {
-        vlf::log::error("Conversion to grayscale has failed.");
+        std::cerr << "Request image is invalid." << std::endl;
         return nullptr;
     }
 
     // Stage 1. Detect a face.
-    vlf::log::info("Detecting faces.");
+    std::clog << "Detecting faces." << std::endl;
 
     // Detect no more than 10 faces in the image.
     enum { MaxDetections = 10 };
+
+    // Data used for detection.
     fsdk::Detection detections[MaxDetections];
     int detectionsCount(MaxDetections);
+    fsdk::IDetector::Landmarks5 landmarks5[MaxDetections];
 
     // Detect faces in the image.
     fsdk::ResultValue<fsdk::FSDKError, int> detectorResult = faceDetector->detect(
-            imageR,
-            imageR.getRect(),
+            image,
+            image.getRect(),
             &detections[0],
+            &landmarks5[0],
             detectionsCount
     );
     if (detectorResult.isError()) {
-        vlf::log::error("Failed to detect face detection. Reason: %s.", detectorResult.what());
+        std::cerr << "Failed to detect face detection. Reason: " << detectorResult.what() << std::endl;
         return nullptr;
     }
     detectionsCount = detectorResult.getValue();
-
-    vlf::log::info("Found %d face(s).", detectionsCount);
-
-    // Stage 2. Detect facial features set and compute a confidence score.
-    vlf::log::info("Detecting facial features set.");
-
-    fsdk::IFeatureSetPtr bestFeatureSet(nullptr);
-    int bestDetectionIndex(0);
-
-    // Create feature set.
-    fsdk::IFeatureSetPtr featureSet = fsdk::acquire(featureFactory->createFeatureSet());
-    if (!featureSet) {
-        vlf::log::error("Failed to create face feature set instance.");
+    if (detectionsCount == 0) {
+        std::clog << "Faces is not found." << std::endl;
         return nullptr;
     }
+    std::clog << "Found " << detectionsCount << " face(s)." << std::endl;
 
+    int bestDetectionIndex(-1);
+    float bestScore(-1.f);
     // Loop through all the faces and find one with the best score.
     for (int detectionIndex = 0; detectionIndex < detectionsCount; ++detectionIndex) {
         fsdk::Detection &detection = detections[detectionIndex];
-        vlf::log::info("Detecting facial features (%d/%d).", (detectionIndex + 1), detectionsCount);
+        std::clog << "Detecting facial features (" << detectionIndex + 1 << "/" << detectionsCount << std::endl;
 
-        // Detect feature set.
-        fsdk::Result<fsdk::FSDKError> featureSetResult = featureDetector->detect(
-                imageR,
-                detection,
-                featureSet
-        );
-        if (featureSetResult.isError()) {
-            vlf::log::error("Failed to detect feature set. Reason: %s.", featureSetResult.what());
-            return nullptr;
-        }
-
-        // Choose the best feature set.
-        if (!bestFeatureSet || featureSet->getConfidence() > bestFeatureSet->getConfidence()) {
-            bestFeatureSet = featureSet;
+        // Choose the best detection.
+        if (detection.score > bestScore) {
+            bestScore = detection.score;
             bestDetectionIndex = detectionIndex;
         }
     }
 
-    // If not detect facial features or feature confidence score is too low, abort.
-    if (!bestFeatureSet || bestFeatureSet->getConfidence() < confidenceThreshold) {
-        vlf::log::info("Face detection succeeded, but no faces with good confidence found.");
+    // If detection confidence score is too low, abort.
+    if (bestScore < confidenceThreshold) {
+        std::clog << "Face detection succeeded, but no faces with good confidence found." << std::endl;
         return nullptr;
     }
-    vlf::log::info("Best face confidence is %0.3f.", bestFeatureSet->getConfidence());
-    fsdk::Detection bestDetection = detections[bestDetectionIndex];
+    std::clog << "Best face confidence is " << bestScore << std::endl;
 
-    // Stage 3. Create CNN face descriptor.
-    vlf::log::info("Extracting descriptor.");
+    // Stage 2. Create face descriptor.
+    std::clog << "Extracting descriptor." << std::endl;
 
-    // Create CNN face descriptor.
-    fsdk::IDescriptorPtr descriptor = fsdk::acquire(descriptorFactory->createDescriptor(fsdk::DT_CNN));
+    // Create face descriptor.
+    fsdk::IDescriptorPtr descriptor = fsdk::acquire(faceEngine->createDescriptor());
     if (!descriptor) {
-        vlf::log::error("Failed to create face descrtiptor instance.");
+        std::cerr << "Failed to create face descrtiptor instance." << std::endl;
         return nullptr;
     }
 
     // Extract face descriptor.
     // This is typically the most time-consuming task.
     fsdk::Result<fsdk::FSDKError> descriptorExtractorResult = descriptorExtractor->extract(
-            imageBGR,
-            bestDetection,
-            bestFeatureSet,
+            image,
+            detections[bestDetectionIndex],
+            landmarks5[bestDetectionIndex],
             descriptor
     );
     if(descriptorExtractorResult.isError()) {
-        vlf::log::error("Failed to extract face descriptor. Reason: %s.", descriptorExtractorResult.what());
+        std::cerr << "Failed to extract face descriptor. Reason: " << descriptorExtractorResult.what() << std::endl;
         return nullptr;
     }
 

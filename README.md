@@ -1,6 +1,6 @@
 # LUNA SDK Examples
 This repository contains examples code for VisionLabs LUNA SDK and is compatible
-with SDK version 2.8.0 and newer.
+with SDK version 3.0.0 and newer.
 
 **Please note, that while these examples are released under MIT license, the SDK itself is not.
 Contact us via email (info@visionlabs.ru) for evaluation and/or licensing terms and conditions.**
@@ -35,15 +35,13 @@ $ build/example1/Example1 examples/images/Cameron_Diaz.ppm examples/images/Jenni
 
 $ build/example2/Example2 examples/images/portrait.ppm
 
-$ build/example3/Example3 examples/images/portrait.ppm
-
-$ build/example4/Example4 examples/images/Cameron_Diaz.jpg
+$ build/example4/Example3 examples/images/Cameron_Diaz.jpg
  
-$ build/example6/Example6 examples/images/Cameron_Diaz.ppm examples/images/ examples/images_lists/list.txt 0.7
+$ build/example6/Example5 examples/images/Cameron_Diaz.ppm examples/images/ examples/images_lists/list.txt 0.7
 
-$ build/example7/Example7 examples/images/portrait.ppm
+$ build/example7/Example6 examples/images/portrait.ppm
 
-$ build/example8/Example8 examples/descriptors/Cameron_Diaz.xpk examples/descriptors/Cameron_Diaz_2.xpk 0.7
+$ build/example8/Example7 examples/descriptors/Cameron_Diaz.xpk examples/descriptors/Cameron_Diaz_2.xpk 0.7
 ```
 
 ## Qt example
@@ -60,5 +58,5 @@ $ cmake -DFSDK_ROOT=.. -DWITH_QT_EXAMPLE=ON -DQt5Core_DIR=/usr/lib64/cmake/Qt5Co
 
 **Run Qt example:**
 ```
-$ build/example5/Example5 examples/images/Jennifer_Aniston.jpg
+$ build/example4/Example4 examples/images/Jennifer_Aniston.jpg
 ```

@@ -1,277 +1,340 @@
 #include <FaceEngine.h>
-#include <vlf/Log.h>
 
-#include <QImage>
-#include <QPainter>
-#include <QPen>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <array>
 
-// Helper function to convert Qt image to FSDK image.
-fsdk::Image convertImage(const QImage &sourceImage);
+// Helper function to load images.
+bool loadImages(
+        const char *imagesDirPath,
+        const char *listPath,
+        std::vector<std::string> &imagesNamesList,
+        std::vector<fsdk::Image> &imagesList
+);
+
+// Extract face descriptor.
+fsdk::IDescriptorPtr extractDescriptor(
+        fsdk::IFaceEnginePtr faceEngine,
+        fsdk::IDetectorPtr faceDetector,
+        fsdk::IDescriptorExtractorPtr descriptorExtractor,
+        fsdk::Image &image
+);
 
 int main(int argc, char *argv[])
 {
-    // Facial feature detection confidence threshold.
-    const float confidenceThreshold = 0.25f;
+    // LSH (Local Sensitive Hashing) table interface.
+    // The LSH tables allow to pick a given number of nearest neighbors, i.e. ones having the closest distance
+	// to the user provided reference descritpor from a batch.
+	// Each LSH table is tied to one descriptor batch. LSH tables are immutable objects
+	// and therefore should be rebuilt if the corresponding batch is changed.
+	// LSH table methods are not thread safe; users should create a table per thread
+	// if parallel processing is required.
+
+    // Number of required nearest neighbors.
+    const int numberNearestNeighbors = 3;
+
+	// Number of matching result.
+	const int numberMatchingResult = 6;
 
     // Parse command line arguments.
     // Arguments:
-    // 1) path to a first image.
-    if (argc != 2) {
-        std::cout << "USAGE: " << argv[0] << " <image>\n"
+    // 1) path to a image,
+    // 2) path to a images directory,
+    // 3) path to a images names list,
+    // 4) matching threshold.
+    // If matching score is above the threshold, then both images
+    // belong to the same person, otherwise they belong to different persons.
+    // Images should be in ppm format.
+    if (argc != 5) {
+        std::cout << "Usage: "<<  argv[0] << " <image> <imagesDir> <list> <threshold>\n"
                 " *image - path to image\n"
+                " *imagesDir - path to images directory\n"
+                " *list - path to images names list\n"
+                " *threshold - similarity threshold in range (0..1]\n"
                 << std::endl;
         return -1;
     }
     char *imagePath = argv[1];
+    char *imagesDirPath = argv[2];
+    char *listPath = argv[3];
+    float threshold = (float)atof(argv[4]);
 
-    vlf::log::info("imagePath: \"%s\".", imagePath);
+    std::clog << "imagePath: \"" << imagePath << "\"" << std::endl;
+    std::clog << "imagesDirPath: \"" << imagesDirPath << "\"" << std::endl;
+    std::clog << "listPath: \"" << listPath << "\"" << std::endl;
+    std::clog << "threshold: " << threshold << std::endl;
 
     // Create config FaceEngine root SDK object.
     fsdk::ISettingsProviderPtr config;
     config = fsdk::acquire(fsdk::createSettingsProvider("./data/faceengine.conf"));
     if (!config) {
-        vlf::log::error("Failed to load face engine config instance.");
+        std::cerr << "Failed to load face engine config instance." << std::endl;
         return -1;
     }
 
     // Create FaceEngine root SDK object.
-    fsdk::IFaceEnginePtr faceEngine = fsdk::acquire(fsdk::createFaceEngine(fsdk::CFF_OMIT_SETTINGS));
+    fsdk::IFaceEnginePtr faceEngine = fsdk::acquire(fsdk::createFaceEngine());
     if (!faceEngine) {
-        vlf::log::error("Failed to create face engine instance.");
+        std::cerr << "Failed to create face engine instance." << std::endl;
         return -1;
     }
     faceEngine->setSettingsProvider(config);
     faceEngine->setDataDirectory("./data/");
 
-    // Create detector factory.
-    fsdk::IDetectorFactoryPtr detectorFactory = fsdk::acquire(faceEngine->createDetectorFactory());
-    if (!detectorFactory) {
-        vlf::log::error("Failed to create face detector factory instance.");
-        return -1;
-    }
-
     // Create MTCNN detector.
-    fsdk::IDetectorPtr detector = fsdk::acquire(detectorFactory->createDetector(fsdk::ODT_MTCNN));
-    if (!detector) {
-        vlf::log::error("Failed to create face detector instance.");
+    fsdk::IDetectorPtr faceDetector = fsdk::acquire(faceEngine->createDetector(fsdk::ODT_MTCNN));
+    if (!faceDetector) {
+        std::cerr << "Failed to create face detector instance." << std::endl;
         return -1;
     }
 
-    // Create feature factory.
-    fsdk::IFeatureFactoryPtr featureFactory = fsdk::acquire(faceEngine->createFeatureFactory());
-    if (!featureFactory) {
-        vlf::log::error("Failed to create face feature factory instance.");
+    // Create descriptor extractor.
+    fsdk::IDescriptorExtractorPtr descriptorExtractor =
+            fsdk::acquire(faceEngine->createExtractor());
+    if (!descriptorExtractor) {
+        std::cerr << "Failed to create face descriptor extractor instance." << std::endl;
         return -1;
     }
-
-    // Create descriptor factory.
-    fsdk::IDescriptorFactoryPtr descriptorFactory = fsdk::acquire(faceEngine->createDescriptorFactory());
-    if (!descriptorFactory) {
-        vlf::log::error("Failed to create face descriptor factory instance.");
-        return -1;
-    }
-
-    // Create CNN warper.
-    fsdk::IWarperPtr warper = fsdk::acquire(descriptorFactory->createWarper(fsdk::DT_CNN));
-    if (!warper) {
-        vlf::log::error("Failed to create face warper instance.");
-        return -1;
-    }
-
-    // Create estimator factory.
-    fsdk::IEstimatorFactoryPtr estimatorFactory = fsdk::acquire(faceEngine->createEstimatorFactory());
-    if (!estimatorFactory) {
-        vlf::log::error("Failed to create face estimator factory instance.");
-        return -1;
-    }
-
-    // Create complex estimator.
-    fsdk::IComplexEstimatorPtr complexEstimator =
-            fsdk::acquire(static_cast<fsdk::IComplexEstimator*>(
-                    estimatorFactory->createEstimator(fsdk::ET_COMPLEX)
-            ));
-    if (!complexEstimator) {
-        vlf::log::error("Failed to create face complex estimator instance.");
-        return -1;
-    }
-
-    // Create quality estimator.
-    fsdk::IQualityEstimatorPtr qualityEstimator =
-            fsdk::acquire(static_cast<fsdk::IQualityEstimator*>(
-                    estimatorFactory->createEstimator(fsdk::ET_QUALITY)
-            ));
-    if (!qualityEstimator) {
-        vlf::log::error("Failed to create face quality estimator instance.");
-        return -1;
-    }
-
-    // Load source image.
-    QImage sourceImage;
-    if (!sourceImage.load(imagePath)) {
-        vlf::log::error("Failed to load image: \"%s\".", imagePath);
-        return -1;
-    }
-
-    // Convert Qt image to FSDK image.
-    fsdk::Image image = convertImage(sourceImage);
-
-    vlf::log::info("Detecting faces.");
-
-    // Detect no more than 10 faces in the image.
-    enum { MaxDetections = 10 };
-
-    // Data used for MTCNN detection.
-	fsdk::Detection detections[MaxDetections];
-	int detectionsCount(MaxDetections);
-	fsdk::IMTCNNDetector::Landmarks landmarks[MaxDetections];
-
-    // Detect faces in the image.
-    fsdk::ResultValue<fsdk::FSDKError, int> detectorResult =
-            detector.as<fsdk::IMTCNNDetector>()->detect(
-                    image,
-                    image.getRect(),
-                    &detections[0],
-                    &landmarks[0],
-                    detectionsCount
-            );
-    if (detectorResult.isError()) {
-        vlf::log::error("Failed tor create face detection. Reason: %s.", detectorResult.what());
-        return -1;
-    }
-    detectionsCount = detectorResult.getValue();
-    vlf::log::info("Found %d face(s).", detectionsCount);
     
-    // Create image with face detection and marked detection points.
-    QPainter painter;
-    painter.begin(&sourceImage);
-    QPen penDetection, penPoint;
-    penDetection.setWidth(3);
-    penDetection.setBrush(Qt::green);
-    penPoint.setWidth(5);
-    penPoint.setBrush(Qt::blue);
-
-    // Feature set.
-    fsdk::IFeatureSetPtr featureSet(nullptr);
-
-    // Loop through all the faces.
-    for (int detectionIndex = 0; detectionIndex < detectionsCount; ++detectionIndex) {
-	    fsdk::Detection &detection = detections[detectionIndex];
-	    fsdk::IMTCNNDetector::Landmarks &landmark = landmarks[detectionIndex];
-
-	    std::cout << "Detection " << detectionIndex + 1 << "\n"
-	            << "Rect: x=" << detection.rect.x << " y=" << detection.rect.y
-                << " w=" << detection.rect.width << " h=" << detection.rect.height << std::endl;
-
-        // Estimate confidence score of face detection.
-        if (detection.score < confidenceThreshold) {
-            vlf::log::info("Face detection succeeded, but confidence score of detection is small.");
-            continue;
-        }
-
-        // Create feature set.
-        featureSet = fsdk::acquire(featureFactory->createFeatureSet(landmark, detection.score));
-        if (!featureSet) {
-            vlf::log::error("Failed to create face feature set instance.");
-            return -1;
-        }
-
-        // Get warped face from detection.
-        fsdk::Image warp;
-        fsdk::Result<fsdk::FSDKError> warperResult = warper->warp(image, detection, featureSet, warp);
-        if (warperResult.isError()) {
-            vlf::log::error("Failed to create warped face. Reason: %s.", warperResult.what());
-            return -1;
-        }
-
-        // Save warped face.
-        warp.saveAsPPM(("warp_" + std::to_string(detectionIndex) + ".ppm").c_str());
-        
-        // Get quality estimate.
-        float qualityOut;
-        fsdk::Result<fsdk::FSDKError> qualityEstimatorResult = qualityEstimator->estimate(warp, &qualityOut);
-        if(qualityEstimatorResult.isError()) {
-            vlf::log::error("Failed to create quality estimating. Reason: %s.", qualityEstimatorResult.what());
-            return -1;
-        }
-        std::cout << "Quality estimated\nQuality: " << qualityOut << std::endl;
-
-        // Get complex estimate.
-        fsdk::ComplexEstimation complexEstimationOut;
-        fsdk::Result<fsdk::FSDKError> complexEstimatorResult =
-                complexEstimator->estimate(warp, complexEstimationOut);
-        if(complexEstimatorResult.isError()) {
-            vlf::log::error("Failed to create complex estimator. Reason: %s.", complexEstimatorResult.what());
-            return -1;
-        }
-        std::cout << "Complex attributes estimated\n"
-                "Gender: " << complexEstimationOut.gender << " (1 - man, 0 - woman)\n"
-                "Wear glasses: " << complexEstimationOut.wearGlasses
-                << " (1 - person wears glasses, 0 - person doesn't wear glasses)\n"
-                "Age: " << complexEstimationOut.age
-                << " (in years)\n"
-                << std::endl;
-
-        painter.setPen(penDetection);
-        painter.drawRect(detection.rect.x, detection.rect.y, detection.rect.width, detection.rect.height);
-
-        painter.setPen(penPoint);
-        painter.drawPoint(
-                landmark.landmarks[fsdk::IMTCNNDetector::Landmarks::LandmarkLeftEye].x + detection.rect.x,
-                landmark.landmarks[fsdk::IMTCNNDetector::Landmarks::LandmarkLeftEye].y + detection.rect.y
-        );
-        painter.drawPoint(
-                landmark.landmarks[fsdk::IMTCNNDetector::Landmarks::LandmarkRightEye].x + detection.rect.x,
-                landmark.landmarks[fsdk::IMTCNNDetector::Landmarks::LandmarkRightEye].y + detection.rect.y
-        );
-        painter.drawPoint(
-                landmark.landmarks[fsdk::IMTCNNDetector::Landmarks::LandmarkNose].x + detection.rect.x,
-                landmark.landmarks[fsdk::IMTCNNDetector::Landmarks::LandmarkNose].y + detection.rect.y
-        );
-        painter.drawPoint(
-                landmark.landmarks[fsdk::IMTCNNDetector::Landmarks::LandmarkMouthLeftCorner].x + detection.rect.x,
-                landmark.landmarks[fsdk::IMTCNNDetector::Landmarks::LandmarkMouthLeftCorner].y + detection.rect.y
-        );
-        painter.drawPoint(
-                landmark.landmarks[fsdk::IMTCNNDetector::Landmarks::LandmarkMouthRightCorner].x + detection.rect.x,
-                landmark.landmarks[fsdk::IMTCNNDetector::Landmarks::LandmarkMouthRightCorner].y + detection.rect.y
-        );
+    // Create descriptor matcher.
+    fsdk::IDescriptorMatcherPtr descriptorMatcher =
+            fsdk::acquire(faceEngine->createMatcher());
+    if (!descriptorMatcher) {
+        std::cerr << "Failed to create face descriptor matcher instance." << std::endl;
+        return -1;
     }
 
-    painter.end();
-    sourceImage.save("face_detection.png");
+    // Load images.
+    std::vector<std::string> imagesNamesList;
+    std::vector<fsdk::Image> imagesList;
+    if (!loadImages(imagesDirPath, listPath, imagesNamesList, imagesList)) {
+        std::cerr << "Failed to load images." << std::endl;
+        return -1;
+    }
+
+    std::clog << "Creating descriptor barch." << std::endl;
+
+    // Create face descriptor batch.
+    fsdk::IDescriptorBatchPtr descriptorBatch =
+            fsdk::acquire(faceEngine->createDescriptorBatch(static_cast<int>(imagesList.size())));
+    if (!descriptorBatch) {
+        std::cerr << "Failed to create face descriptor batch instance." << std::endl;
+        return -1;
+    }
+
+    // Extract faces descriptors.
+    for (fsdk::Image &image : imagesList) {
+        fsdk::IDescriptorPtr descriptor = extractDescriptor(
+                faceEngine,
+                faceDetector,
+                descriptorExtractor,
+                image
+        );
+        if (!descriptor)
+            return -1;
+        fsdk::Result<fsdk::DescriptorBatchError> descriptorBatchAddResult =
+                descriptorBatch->add(descriptor);
+        if (descriptorBatchAddResult.isError()) {
+            std::cerr << "Failed to add descriptor to descriptor batch." << std::endl;
+            return -1;
+        }
+    }
+
+    std::clog << "Creating LSH table." << std::endl;
+
+    // Create LSH table.
+    fsdk::ILSHTablePtr lsh =
+            fsdk::acquire(faceEngine->createLSHTable(descriptorBatch.get()));
+    if (!lsh) {
+        std::cerr << "Failed to create LSH table instance." << std::endl;
+        return -1;
+    }
+
+    // KNN index array.
+    std::array<int, numberNearestNeighbors> nearestNeighbors;
+
+    fsdk::Image image;
+    if (!image.loadFromPPM(imagePath)) {
+        std::cerr << "Failed to load image: \"" << imagePath << "\"" << std::endl;
+        return -1;
+    }
+
+    // Extract face descriptor.
+    fsdk::IDescriptorPtr descriptor = extractDescriptor(
+            faceEngine,
+            faceDetector,
+            descriptorExtractor,
+            image
+    );
+    if (!descriptor)
+        return -1;
+
+    // Get numberNearestNeighbors nearest neighbours.
+    lsh->getKNearestNeighbours(descriptor, numberNearestNeighbors, &nearestNeighbors[0]);
+    std::clog << "Name image: \"" << imagePath <<
+        "\", nearest neighbors: \"" << imagesNamesList[nearestNeighbors[0]] <<
+        "\", \"" << imagesNamesList[nearestNeighbors[1]] <<
+        "\", \"" << imagesNamesList[nearestNeighbors[2]] << "\"" << std::endl;
+
+    // Match descriptor and descriptor batch.
+    fsdk::MatchingResult matchingResult[numberMatchingResult];
+    fsdk::Result<fsdk::FSDKError> descriptorMatcherResult =
+            descriptorMatcher->match(
+                    descriptor,
+                    descriptorBatch,
+                    &nearestNeighbors[0],
+                    numberNearestNeighbors,
+                    &matchingResult[0]
+            );
+    if (!descriptorMatcherResult) {
+        std::cerr << "Failed to match. Reason: " << descriptorMatcherResult.what() << std::endl;
+        return -1;
+    }
+
+    std::ostringstream oss;
+
+    for (size_t j = 0; j < imagesList.size(); ++j) {
+        std::clog << "Images: \"" << imagePath <<
+            "\" and \"" << imagesNamesList[j] << "\" matched with score: " <<
+            matchingResult[j].similarity * 100.f << std::endl;
+
+        oss << "Images: \"" << imagePath << "\" and \""
+                << imagesNamesList[j] << "\" ";
+        if (matchingResult[j].similarity > threshold)
+            oss << "belong to one person." << std::endl;
+        else
+            oss << "belong to different persons." << std::endl;
+    }
+
+    std::cout << oss.str();
 
     return 0;
 }
 
-fsdk::Image convertImage(const QImage &sourceImage) {
-    fsdk::Image colorImage(
-        sourceImage.width(),
-        sourceImage.height(),
-        fsdk::Format::R8G8B8
+bool loadImages(
+        const char *imagesDirPath,
+        const char *listPath,
+        std::vector<std::string> &imagesNamesList,
+        std::vector<fsdk::Image> &imagesList
+) {
+    std::ifstream listFile(listPath);
+    if (!listFile) {
+        std::cerr << "Failed to open file: " << listPath << std::endl;
+        return false;
+    }
+    std::string imageName;
+    while (listFile >> imageName) {
+        fsdk::Image image;
+        std::string imagePath = std::string(imagesDirPath) + "/" + imageName;
+        if (!image.loadFromPPM(imagePath.c_str())) {
+            std::cerr << "Failed to load image: \"" << imagePath << "\"" << std::endl;
+            return false;
+        }
+        imagesNamesList.push_back(imageName);
+        imagesList.push_back(image);
+    }
+    listFile.close();
+
+    return true;
+}
+
+fsdk::IDescriptorPtr extractDescriptor(
+        fsdk::IFaceEnginePtr faceEngine,
+        fsdk::IDetectorPtr faceDetector,
+        fsdk::IDescriptorExtractorPtr descriptorExtractor,
+        fsdk::Image &image
+) {
+    // Facial feature detection confidence threshold.
+    const float confidenceThreshold = 0.25f;
+
+    if (!image) {
+        std::cerr << "Request image is invalid." << std::endl;
+        return nullptr;
+    }
+
+    // Create color image.
+    fsdk::Image imageBGR;
+    image.convert(imageBGR, fsdk::Format::B8G8R8);
+    if (!imageBGR) {
+        std::cerr << "Conversion to BGR has failed." << std::endl;
+        return nullptr;
+    }
+
+     std::clog << "Detecting faces." << std::endl;
+
+   // Detect no more than 10 faces in the image.
+    enum { MaxDetections = 10 };
+
+    // Data used for detection.
+    fsdk::Detection detections[MaxDetections];
+    int detectionsCount(MaxDetections);
+    fsdk::IDetector::Landmarks5 landmarks5[MaxDetections];
+
+    // Detect faces in the image.
+    fsdk::ResultValue<fsdk::FSDKError, int> detectorResult = faceDetector->detect(
+            image,
+            image.getRect(),
+            &detections[0],
+            &landmarks5[0],
+            detectionsCount
     );
+    if (detectorResult.isError()) {
+        std::cerr << "Failed to detect face detection. Reason: " << detectorResult.what() << std::endl;
+        return nullptr;
+    }
+    detectionsCount = detectorResult.getValue();
+    if (detectionsCount == 0) {
+        std::clog << "Faces is not found." << std::endl;
+        return nullptr;
+    }
+    std::clog << "Found " << detectionsCount << " face(s)." << std::endl;
 
-    // Do not rely on Qt image format conversion.
-    // This code isn't very fast but does the right
-    // thing in all cases.
-    uchar *data = colorImage.getDataAs<uchar>();
-    for (int y = 0; y < colorImage.getHeight(); ++y) {
-        for(int x = 0; x < colorImage.getWidth(); ++x) {
-            union rgba {
-                uchar ch[4];
-                uint dword;
-            };
+    int bestDetectionIndex(-1);
+    float bestScore(-1.f);
+    // Loop through all the faces and find one with the best score.
+    for (int detectionIndex = 0; detectionIndex < detectionsCount; ++detectionIndex) {
+        fsdk::Detection &detection = detections[detectionIndex];
+        std::clog << "Detecting facial features (" << detectionIndex + 1 << "/" << detectionsCount << std::endl;
 
-            rgba pixel;
-            pixel.dword = sourceImage.pixel(x, y);
-
-            uchar *ptr = data + (y * colorImage.getWidth() + x) * 3;
-
-            ptr[0] = pixel.ch[2]; // r-g-b order
-            ptr[1] = pixel.ch[1];
-            ptr[2] = pixel.ch[0];
+        // Choose the best detection.
+        if (detection.score > bestScore) {
+            bestScore = detection.score;
+            bestDetectionIndex = detectionIndex;
         }
     }
 
-    return colorImage;
+    // If detection confidence score is too low, abort.
+    if (bestScore < confidenceThreshold) {
+        std::clog << "Face detection succeeded, but no faces with good confidence found." << std::endl;
+        return nullptr;
+    }
+    std::clog << "Best face confidence is " << bestScore << std::endl;
+
+    // Stage 2. Create face descriptor.
+    std::clog << "Extracting descriptor." << std::endl;
+
+    // Create face descriptor.
+    fsdk::IDescriptorPtr descriptor = fsdk::acquire(faceEngine->createDescriptor());
+    if (!descriptor) {
+        std::cerr << "Failed to create face descrtiptor instance." << std::endl;
+        return nullptr;
+    }
+
+    // Extract face descriptor.
+    // This is typically the most time-consuming task.
+    fsdk::Result<fsdk::FSDKError> descriptorExtractorResult = descriptorExtractor->extract(
+            image,
+            detections[bestDetectionIndex],
+            landmarks5[bestDetectionIndex],
+            descriptor
+    );
+    if(descriptorExtractorResult.isError()) {
+        std::cerr << "Failed to extract face descriptor. Reason: " << descriptorExtractorResult.what() << std::endl;
+        return nullptr;
+    }
+
+    return descriptor;
 }

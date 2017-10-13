@@ -1,14 +1,16 @@
 # Example 2
 ## What it does
-This example demonstrates how to estimate a face quality on an image and to detect attributes on a face.
+This example demonstrates how to use the MTCNN detector and
+to estimate a face attributes, quality and eye on an image.
 
 ## Prerequisites
 *As said in the introduction page, this repository doesn't provide SDK headers, libraries and tools;
 you have to obtain them from VisionLabs.*
 
-This example assumes that you have read the **FaceEngine Handbook** already (or at least have it
-somewhere nearby for reference) and are familiar with some core concepts, like memory management,
-object ownership and life-time control. This sample will not explain these aspects in detail.
+This example assumes that you have read the **FaceEngine Handbook** already
+(or at least have it somewhere nearby for reference) and are familiar with some core concepts,
+like memory management, object ownership and life-time control. This sample will not explain
+these aspects in detail.
 
 ## Example walkthrough
 To get familiar with FSDK usage and common practices, please go through Example 1 first.
@@ -20,20 +22,34 @@ To get familiar with FSDK usage and common practices, please go through Example 
 Warped images with faces.
 ```
 Detection 1
-Rect: x=181 y=158 w=99 h=100
-Quality estimated
-Quality: 0.953474
-Complex attributes estimated
-Gender: 0.00851618 (1 - man, 0 - woman)
-Wear glasses: 0.000833967 (1 - person wears glasses, 0 - person doesn't wear glasses)
-Age: 15.7716 (in years)
+Rect: x=277 y=426 w=73 h=94
+Attribure estimate:
+gender: 0.999705 (1 - man, 0 - woman)
+wearGlasses: 0.000118364 (1 - person wears glasses, 0 - person doesn't wear glasses)
+age: 17.7197 (in years)
+Quality estimate:
+light: 0.962603
+dark: 0.974558
+gray: 0.980648
+blur: 0.955808
+quality: 0.955808
+Eye estimate:
+left eye state: 2 (0 - close, 1 - open, 2 - noteye)
+right eye state: 2 (0 - close, 1 - open, 2 - noteye)
 
 Detection 2
-Rect: x=259 y=428 w=100 h=100
-Quality estimated
-Quality: 0.955808
-Complex attributes estimated
-Gender: 0.999883 (1 - man, 0 - woman)
-Wear glasses: 7.95563e-05 (1 - person wears glasses, 0 - person doesn't wear glasses)
-Age: 17.647 (in years)
+Rect: x=203 y=159 w=63 h=89
+Attribure estimate:
+gender: 0.0053403 (1 - man, 0 - woman)
+wearGlasses: 0.000911222 (1 - person wears glasses, 0 - person doesn't wear glasses)
+age: 16.1504 (in years)
+Quality estimate:
+light: 0.964406
+dark: 0.971644
+gray: 0.981737
+blur: 0.955808
+quality: 0.955808
+Eye estimate:
+left eye state: 0 (0 - close, 1 - open, 2 - noteye)
+right eye state: 2 (0 - close, 1 - open, 2 - noteye)
 ```
