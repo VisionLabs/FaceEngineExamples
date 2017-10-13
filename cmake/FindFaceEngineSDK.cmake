@@ -51,7 +51,6 @@ set(FSDK_LIB_PREFIX ${FSDK_COMPILER_NAME}/${FSDK_TARGET_NAME})
 
 # List of all SDK libraries.
 set(FSDK_LIB_NAMES
-	FaceEngineCore
 	FaceEngineSDK)
 
 # Find optimized libraries.
