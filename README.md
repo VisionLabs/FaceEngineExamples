@@ -35,13 +35,13 @@ $ build/example1/Example1 examples/images/Cameron_Diaz.ppm examples/images/Jenni
 
 $ build/example2/Example2 examples/images/portrait.ppm
 
-$ build/example4/Example3 examples/images/Cameron_Diaz.jpg
+$ build/example3/Example3 examples/images/Cameron_Diaz.jpg
  
-$ build/example6/Example5 examples/images/Cameron_Diaz.ppm examples/images/ examples/images_lists/list.txt 0.7
+$ build/example5/Example5 examples/images/Cameron_Diaz.ppm examples/images/ examples/images_lists/list.txt 0.7
 
-$ build/example7/Example6 examples/images/portrait.ppm
+$ build/example6/Example6 examples/images/portrait.ppm
 
-$ build/example8/Example7 examples/descriptors/Cameron_Diaz.xpk examples/descriptors/Cameron_Diaz_2.xpk 0.7
+$ build/example7/Example7 examples/descriptors/Cameron_Diaz.xpk examples/descriptors/Cameron_Diaz_2.xpk 0.7
 ```
 
 ## Qt example
