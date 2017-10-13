@@ -25,109 +25,89 @@ To prepare data for tests you may use such tools as ImageMagick, Gimp, XnView.
 We present a rather rich face processing pipeline. In fact, it is a bit too rich for this
 sample, but it was made so intentionally to give you a clue of some real world usage scenarios.
 
-### Stage 0. Preparations
+### Preparations
 SDK initialization. It is pretty straightforward
 and self-explanatory, so we will not discuss it here.
 
-### Stage 1. Face detection
+### Face detection
 This stage is implemented in ```extractDescriptor``` function.
 At this stage we have an image. Presumably, there is a face somewhere in it and we would
 like to find it. For that purpose, a face detector is used. We use it like so:
 ```C++
-    // Detect no more than 10 faces in the image.
-    enum { MaxDetections = 10 };
-    fsdk::Detection detections[MaxDetections];
-    int detectionsCount(MaxDetections);
+// Create MTCNN detector.
+faceDetector = fsdk::acquire(faceEngine->createDetector(fsdk::ODT_MTCNN));
+if (!faceDetector) {
+    ...
+}
+...
+// Detect no more than 10 faces in the image.
+enum { MaxDetections = 10 };
 
-    // Detect faces in the image.
-    fsdk::ResultValue<fsdk::FSDKError, int> detectorResult = faceDetector->detect(
-            imageR,
-            imageR.getRect(),
-            &detections[0],
-            detectionsCount
-    );
-    if (detectorResult.isError()) {
-        vlf::log::error("Failed to detect face detection. Reason: %s.", detectorResult.what());
-        return nullptr;
-    }
-    detectionsCount = detectorResult.getValue();
+// Data used for detection.
+fsdk::Detection detections[MaxDetections];
+int detectionsCount(MaxDetections);
+fsdk::IDetector::Landmarks5 landmarks5[MaxDetections];
+
+// Detect faces in the image.
+fsdk::ResultValue<fsdk::FSDKError, int> detectorResult = faceDetector->detect(
+        image,
+        image.getRect(),
+        &detections[0],
+        &landmarks[0],
+        detectionsCount
+);
+if (detectorResult.isError()) {
+    ...
+}
+detectionsCount = detectorResult.getValue();
 ```
 As the result we know whether we could detect faces (and how many of them) and what prevented us
 from achieving that.
 
-We recommend the use of MTCNN detector.
-
-### Stage 2. Facial feature detection
-This stage is implemented in ```extractDescriptor``` function.
-We detect facial features (often called landmarks). We need these landmarks for two reasons:
-1. they're required to extract a face descriptor (see below),
-2. we can estimate landmarks alignment score and check if this face detection is good enough for us.
-
-We use feature detector like so for all face detections:
-```C++
-    // Create feature set.
-    fsdk::IFeatureSetPtr featureSet = fsdk::acquire(featureFactory->createFeatureSet());
-    if (!featureSet) {
-        vlf::log::error("Failed to create face feature set instance.");
-        return nullptr;
-    }
-
-    // Detect feature set.
-    fsdk::Result<fsdk::FSDKError> featureSetResult = featureDetector->detect(
-            imageR,
-            detection,
-            featureSet
-    );
-    if (featureSetResult.isError()) {
-        vlf::log::error("Failed to detect feature set. Reason: %s.", featureSetResult.what());
-        return nullptr;
-    }
-```
-
-### Stage 3. Descriptor extraction
+### Descriptor extraction
 This stage is implemented in ```extractDescriptor``` function.
 When we have a reliable face detection, we need to extract some data from it that can be used
 for comparison or *matching*. Such data is contained in descriptor object. A descriptor may be
 extracted from an image using face detection and landmarks coordinates. Later, one or multiple
 descriptors can be matched to determine face similarity.
 ```C++
-    // Create CNN face descriptor.
-    fsdk::IDescriptorPtr descriptor = fsdk::acquire(descriptorFactory->createDescriptor(fsdk::DT_CNN));
-    if (!descriptor) {
-        vlf::log::error("Failed to create face descrtiptor instance.");
-        return nullptr;
-    }
+// Create face descriptor.
+fsdk::IDescriptorPtr descriptor = fsdk::acquire(faceEngine->createDescriptor());
+if (!descriptor) {
+    ...
+}
 
-    // Extract face descriptor.
-    // This is typically the most time-consuming task.
-    fsdk::Result<fsdk::FSDKError> descriptorExtractorResult = descriptorExtractor->extract(
-            imageBGR,
-            bestDetection,
-            bestFeatureSet,
-            descriptor
-    );
-    if(descriptorExtractorResult.isError()) {
-        vlf::log::error("Failed to extract face descriptor. Reason: %s.", descriptorExtractorResult.what());
-        return nullptr;
-    }
+// Extract face descriptor.
+// This is typically the most time-consuming task.
+fsdk::Result<fsdk::FSDKError> descriptorExtractorResult = descriptorExtractor->extract(
+        image,
+        detections[bestDetectionIndex],
+        landmarks5[bestDetectionIndex],
+        descriptor
+);
+if(descriptorExtractorResult.isError()) {
+    ...
+}
 ```
 
-### Stage 4. Descriptor matching
+### Descriptor matching
 This stage is pretty simple. We match two descriptors and see how similar they are.
 For that we use a descriptor matcher object.
 ```C++
-    // Match 2 descriptors.
-    // Returns similarity in range (0..1],
-    // where: 0 means totally different.
-    //        1 means totally the same.
-    fsdk::ResultValue<fsdk::FSDKError, fsdk::MatchingResult> descriptorMatcherResult =
-            descriptorMatcher->match(descriptor1, descriptor2);
-    if (descriptorMatcherResult.isError()) {
-        vlf::log::error("Failed to match. Reason: %s.", descriptorMatcherResult.what());
-        return -1;
-    }
+// Descriptors similarity.
+float similarity;
 
-    similarity = descriptorMatcherResult.getValue().similarity;
+// Match 2 descriptors.
+// Returns similarity in range (0..1],
+// where: 0 means totally different.
+//        1 means totally the same.
+fsdk::ResultValue<fsdk::FSDKError, fsdk::MatchingResult> descriptorMatcherResult =
+        descriptorMatcher->match(descriptor1, descriptor2);
+if (descriptorMatcherResult.isError()) {
+    ...
+}
+
+similarity = descriptorMatcherResult.getValue().similarity;
 ```
 *Similarity* score tells how similar these descriptors are. Its value is in (0..1] range.
 Values near 1 tell us that the descriptors are very similar.

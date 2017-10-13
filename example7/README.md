@@ -1,6 +1,6 @@
-# Example 7
+# Example 8
 ## What it does
-The example demonstrates how to save a descriptor and descriptor batch to a file.
+The example demonstrates how to load a descriptor from a file and to compare two descriptors.
 
 ## Prerequisites
 *As said in the introduction page, this repository doesn't provide SDK headers, libraries and tools;
@@ -15,7 +15,9 @@ these aspects in detail.
 To get familiar with FSDK usage and common practices, please go through Example 1 first.
 
 ## How to run
-./Example7 <some_image.ppm>
+./Example8 <descriptor1.xpk> <descriptor2.xpk> threshold
 
 ## Example output
-Warped images, descriptors, descriptor batch.
+```
+Descriptors belong to one person.
+```
