@@ -97,6 +97,7 @@ int main(int argc, char *argv[])
     fsdk::Detection detections[MaxDetections];
     int detectionsCount(MaxDetections);
     fsdk::IDetector::Landmarks5 landmarks5[MaxDetections];
+    fsdk::IDetector::Landmarks68 landmarks68[MaxDetections];
 
     // Detect faces in the image.
     fsdk::ResultValue<fsdk::FSDKError, int> detectorResult = faceDetector->detect(
@@ -104,6 +105,7 @@ int main(int argc, char *argv[])
             image.getRect(),
             &detections[0],
             &landmarks5[0],
+            &landmarks68[0],
             detectionsCount
     );
     if (detectorResult.isError()) {
@@ -120,11 +122,13 @@ int main(int argc, char *argv[])
     // Create image with face detection and marked detection points.
     QPainter painter;
     painter.begin(&sourceImage);
-    QPen penDetection, penPoint;
+    QPen penDetection, penPoint, penPoint68;
     penDetection.setWidth(3);
     penDetection.setBrush(Qt::green);
     penPoint.setWidth(5);
     penPoint.setBrush(Qt::blue);
+    penPoint68.setWidth(2);
+    penPoint68.setBrush(Qt::red);
 
     // Loop through all the faces.
     for (int detectionIndex = 0; detectionIndex < detectionsCount; ++detectionIndex) {
@@ -237,6 +241,14 @@ int main(int argc, char *argv[])
                 landmarks5[detectionIndex].landmarks[fsdk::IDetector::Landmarks5Indexes::LandmarkMouthRightCorner].y +
                     detections[detectionIndex].rect.y
         );
+
+        painter.setPen(penPoint68);
+        for (const auto &landmark : landmarks68[detectionIndex].landmarks) {
+            painter.drawPoint(
+                landmark.x + detections[detectionIndex].rect.x,
+                landmark.y + detections[detectionIndex].rect.y
+            );
+        }
     }
 
     painter.end();
