@@ -73,6 +73,13 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    // Create head pose estimator.
+    fsdk::IHeadPoseEstimatorPtr headPoseEstimator = fsdk::acquire(faceEngine->createHeadPoseEstimator());
+    if (!headPoseEstimator) {
+        std::cerr << "Failed to create head pose estimator instance." << std::endl;
+        return -1;
+    }
+
     // Load image.
     fsdk::Image image;
     if (!image.loadFromPPM(imagePath)) {
@@ -88,7 +95,8 @@ int main(int argc, char *argv[])
     // Data used for detection.
     fsdk::Detection detections[MaxDetections];
     int detectionsCount(MaxDetections);
-    fsdk::IDetector::Landmarks5 landmarks5[MaxDetections];
+    fsdk::Landmarks5 landmarks5[MaxDetections];
+    fsdk::Landmarks68 landmarks68[MaxDetections];
 
     // Detect faces in the image.
     fsdk::ResultValue<fsdk::FSDKError, int> detectorResult = faceDetector->detect(
@@ -96,6 +104,7 @@ int main(int argc, char *argv[])
             image.getRect(),
             &detections[0],
             &landmarks5[0],
+            &landmarks68[0],
             detectionsCount
     );
     if (detectorResult.isError()) {
@@ -178,6 +187,23 @@ int main(int argc, char *argv[])
         std::cout << "Eye estimate:" <<
             "\nleft eye state: " << static_cast<int>(eyeEstimation[0].eyeState) << " (0 - close, 1 - open, 2 - noteye)" <<
             "\nright eye state: " << static_cast<int>(eyeEstimation[1].eyeState) << " (0 - close, 1 - open, 2 - noteye)" <<
+            std::endl;
+        std::cout << std::endl;
+
+         // Get head pose estimate.
+        fsdk::HeadPoseEstimation headPoseEstimation;
+        fsdk::Result<fsdk::FSDKError> headPoseEstimationResult = headPoseEstimator->estimate(
+            landmarks68[detectionIndex],
+            headPoseEstimation
+        );
+        if(headPoseEstimationResult.isError()) {
+            std::cerr << "Failed to create head pose estimation. Reason: " << headPoseEstimationResult.what() << std::endl;
+            return -1;
+        }
+        std::cout << "Head pose estimate:" <<
+            "\npitch angle estimation: " << headPoseEstimation.pitch <<
+            "\nyaw angle estimation: " << headPoseEstimation.yaw <<
+            "\nroll angle estimation: " << headPoseEstimation.yaw <<
             std::endl;
         std::cout << std::endl;
     }

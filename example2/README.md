@@ -1,7 +1,7 @@
 # Example 2
 ## What it does
 This example demonstrates how to use the MTCNN detector and
-to estimate a face attributes, quality and eye on an image.
+to estimate a face attributes, quality, eye and head pose on an image.
 
 ## Prerequisites
 *As said in the introduction page, this repository doesn't provide SDK headers, libraries and tools;

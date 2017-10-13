@@ -1,7 +1,8 @@
 # Example 5
 ## What it does
 This example demonstrates how to use the qt library to processing images of different
-formats by example the MTCNN detector, landmarks5, landmarks68 and to estimate a face attributes, quality and eye on an image.
+formats by example the MTCNN detector, landmarks5, landmarks68 and to estimate a face attributes, quality,
+eye and head pose on an image.
 
 ## Prerequisites
 *As said in the introduction page, this repository doesn't provide SDK headers, libraries and tools;

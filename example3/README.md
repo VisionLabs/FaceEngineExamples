@@ -1,7 +1,7 @@
 # Example 3
 ## What it does
 This example demonstrates how to use the FreeImage library to processing images of different
-formats by example the MTCNN detector and to estimate a face attributes, quality and eye on an image.
+formats by example the MTCNN detector and to estimate a face attributes, quality, eye and head pose on an image.
 
 NOTE: In this example, the required dependencies for FreeImage are automatically installed.
 

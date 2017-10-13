@@ -271,7 +271,7 @@ fsdk::IDescriptorPtr extractDescriptor(
     // Data used for detection.
     fsdk::Detection detections[MaxDetections];
     int detectionsCount(MaxDetections);
-    fsdk::IDetector::Landmarks5 landmarks5[MaxDetections];
+    fsdk::Landmarks5 landmarks5[MaxDetections];
 
     // Detect faces in the image.
     fsdk::ResultValue<fsdk::FSDKError, int> detectorResult = faceDetector->detect(
