@@ -30,22 +30,12 @@ int main(int argc, char *argv[])
 
     std::clog << "imagePath: \"" << imagePath << "\"" << std::endl;
 
-    // Create config FaceEngine root SDK object.
-    fsdk::ISettingsProviderPtr config;
-    config = fsdk::acquire(fsdk::createSettingsProvider("./data/faceengine.conf"));
-    if (!config) {
-        std::cerr << "Failed to load face engine config instance." << std::endl;
-        return -1;
-    }
-
-    // Create FaceEngine root SDK object.
-    fsdk::IFaceEnginePtr faceEngine = fsdk::acquire(fsdk::createFaceEngine());
+     // Create FaceEngine root SDK object.
+    fsdk::IFaceEnginePtr faceEngine = fsdk::acquire(fsdk::createFaceEngine("./data", "./data/faceengine.conf"));
     if (!faceEngine) {
         std::cerr << "Failed to create face engine instance." << std::endl;
         return -1;
     }
-    faceEngine->setSettingsProvider(config);
-    faceEngine->setDataDirectory("./data/");
 
     // Create MTCNN detector.
     fsdk::IDetectorPtr faceDetector = fsdk::acquire(faceEngine->createDetector(fsdk::ODT_MTCNN));

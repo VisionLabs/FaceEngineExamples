@@ -42,7 +42,6 @@ int main(int argc, char *argv[])
     // Such objects implement reference counting to manage their life time. The smart pointers
     // will ensure that reference counting functions are called appropriately and the objects
     // are properly destroyed after use.
-    fsdk::ISettingsProviderPtr config;                    // Config root SDK object.
     fsdk::IFaceEnginePtr faceEngine;                      // Root SDK object.
 
     // SDK components that we will use for facial recognition.
@@ -50,21 +49,12 @@ int main(int argc, char *argv[])
     fsdk::IDescriptorExtractorPtr descriptorExtractor;    // Facial descriptor extractor.
     fsdk::IDescriptorMatcherPtr descriptorMatcher;        // Descriptor matcher.
 
-    // Create config FaceEngine root SDK object.
-    config = fsdk::acquire(fsdk::createSettingsProvider("./data/faceengine.conf"));
-    if (!config) {
-        std::cerr << "Failed to load face engine config instance." << std::endl;
-        return -1;
-    }
-
     // Create FaceEngine root SDK object.
-    faceEngine = fsdk::acquire(fsdk::createFaceEngine());
+    faceEngine = fsdk::acquire(fsdk::createFaceEngine("./data", "./data/faceengine.conf"));
     if (!faceEngine) {
         std::cerr << "Failed to create face engine instance." << std::endl;
         return -1;
     }
-    faceEngine->setSettingsProvider(config);
-    faceEngine->setDataDirectory("./data/");
 
     // Create MTCNN detector.
     faceDetector = fsdk::acquire(faceEngine->createDetector(fsdk::ODT_MTCNN));

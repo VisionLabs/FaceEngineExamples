@@ -40,13 +40,12 @@ int main(int argc, char *argv[])
     config->setValue("DescriptorFactory::Settings", "model", 46);
 
     // Create FaceEngine root SDK object.
-    fsdk::IFaceEnginePtr faceEngine = fsdk::acquire(fsdk::createFaceEngine());
+    fsdk::IFaceEnginePtr faceEngine = fsdk::acquire(fsdk::createFaceEngine("./data", "./data/faceengine.conf"));
     if (!faceEngine) {
         std::cerr << "Failed to create face engine instance." << std::endl;
         return -1;
     }
     faceEngine->setSettingsProvider(config);
-    faceEngine->setDataDirectory("./data/");
 
     // Create descriptor matcher.
     fsdk::IDescriptorMatcherPtr descriptorMatcher = fsdk::acquire(faceEngine->createMatcher());
