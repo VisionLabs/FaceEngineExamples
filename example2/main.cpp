@@ -122,8 +122,30 @@ int main(int argc, char *argv[])
 
         // Get warped face from detection.
         fsdk::Transformation transformation;
+        fsdk::Landmarks5 transformedLandmarks5;
+        fsdk::Landmarks68 transformedLandmarks68;
         fsdk::Image warp;
         transformation = warper->createTransformation(detections[detectionIndex], landmarks5[detectionIndex]);
+        fsdk::Result<fsdk::FSDKError> transformedLandmarks5Result = warper->warp(
+            landmarks5[detectionIndex],
+            transformation,
+            transformedLandmarks5
+        );
+        if (transformedLandmarks5Result.isError()) {
+            std::cerr << "Failed to create transformed landmarks5. Reason: " <<
+                transformedLandmarks5Result.what() << std::endl;
+            return -1;
+        }
+        fsdk::Result<fsdk::FSDKError> transformedLandmarks68Result = warper->warp(
+            landmarks68[detectionIndex],
+            transformation,
+            transformedLandmarks68
+        );
+        if (transformedLandmarks68Result.isError()) {
+            std::cerr << "Failed to create transformed landmarks68. Reason: " <<
+                transformedLandmarks68Result.what() << std::endl;
+            return -1;
+        }
         fsdk::Result<fsdk::FSDKError> warperResult = warper->warp(image, transformation, warp);
         if (warperResult.isError()) {
             std::cerr << "Failed to create warped face. Reason: " << warperResult.what() << std::endl;
@@ -164,7 +186,7 @@ int main(int argc, char *argv[])
         fsdk::EyeEstimation eyeEstimation[2];
         fsdk::Result<fsdk::FSDKError> eyeEstimationResult = eyeEstimator->estimate(
             warp,
-            landmarks5[detectionIndex],
+            transformedLandmarks5,
             eyeEstimation[0],
             eyeEstimation[1]
         );
@@ -181,7 +203,7 @@ int main(int argc, char *argv[])
          // Get head pose estimate.
         fsdk::HeadPoseEstimation headPoseEstimation;
         fsdk::Result<fsdk::FSDKError> headPoseEstimationResult = headPoseEstimator->estimate(
-            landmarks68[detectionIndex],
+            transformedLandmarks68,
             headPoseEstimation
         );
         if(headPoseEstimationResult.isError()) {
