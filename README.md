@@ -34,14 +34,32 @@ $ build/example1/Example1 examples/images/Cameron_Diaz.ppm examples/images/Camer
 $ build/example1/Example1 examples/images/Cameron_Diaz.ppm examples/images/Jennifer_Aniston.ppm 0.7
 
 $ build/example2/Example2 examples/images/portrait.ppm
-
-$ build/example3/Example3 examples/images/Cameron_Diaz.jpg
  
 $ build/example5/Example5 examples/images/Cameron_Diaz.ppm examples/images/ examples/images_lists/list.txt 0.7
 
 $ build/example6/Example6 examples/images/portrait.ppm
 
 $ build/example7/Example7 examples/descriptors/Cameron_Diaz.xpk examples/descriptors/Cameron_Diaz_2.xpk 0.7
+```
+
+## FreeImage example
+**Build with FreeImage example (from FSDK_ROOT/build):**
+Note: the installation command FreeImage for Centos:
+```
+$ sudo yum install freeimage-devel
+```
+Ubuntu:
+```
+$ sudo apt-get install libfreeimage3 libfreeimage-dev
+```
+Windows: automatic installation from CMakeLists file.
+```
+$ cmake -DFSDK_ROOT=.. -DWITH_FREEIMAGE_EXAMPLE=ON ../examples
+```
+
+**Run FreeImage example:**
+```
+$ build/example3/Example3 examples/images/Cameron_Diaz.jpg
 ```
 
 ## Qt example
