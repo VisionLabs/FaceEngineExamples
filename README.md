@@ -44,6 +44,7 @@ $ build/example7/Example7 examples/descriptors/Cameron_Diaz.xpk examples/descrip
 
 ## FreeImage example
 **Build with FreeImage example (from FSDK_ROOT/build):**
+
 Note: the installation command FreeImage for Centos:
 ```
 $ sudo yum install freeimage-devel
