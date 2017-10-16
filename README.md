@@ -29,16 +29,20 @@ $ make
 ## Run examples
 Note: data folder must be at <fsdk_root>/data on Windows and on Linux.
 ```
+# Detecting, Extracting, Matching
 $ build/example1/Example1 examples/images/Cameron_Diaz.ppm examples/images/Cameron_Diaz_2.ppm 0.7
-
 $ build/example1/Example1 examples/images/Cameron_Diaz.ppm examples/images/Jennifer_Aniston.ppm 0.7
 
+# Detecting, Landmarks, Estimating( Attributes, Quality, Eyes, Head pose)
 $ build/example2/Example2 examples/images/portrait.ppm
  
+# Indexing
 $ build/example5/Example5 examples/images/Cameron_Diaz.ppm examples/images/ examples/images_lists/list.txt 0.7
 
+# Descriptor and batch saving
 $ build/example6/Example6 examples/images/portrait.ppm
 
+# Descriptor and batch loading
 $ build/example7/Example7 examples/descriptors/Cameron_Diaz.xpk examples/descriptors/Cameron_Diaz_2.xpk 0.7
 ```
 
