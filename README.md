@@ -52,9 +52,9 @@ Ubuntu:
 $ sudo apt-get install libfreeimage3 libfreeimage-dev
 ```
 Windows: automatic installation from CMakeLists file.
-```
 
 **Build with FreeImage example (from FSDK_ROOT/build):**
+```
 $ cmake -DFSDK_ROOT=.. -DWITH_FREEIMAGE_EXAMPLE=ON ../examples
 ```
 
