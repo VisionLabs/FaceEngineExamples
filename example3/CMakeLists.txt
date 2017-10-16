@@ -46,8 +46,8 @@ target_link_libraries(Example3 ${FSDK_LIBRARIES} ${FREEIMAGE_LIBRARIES})
 
 install(TARGETS Example3 RUNTIME DESTINATION bin)
 
-install(DIRECTORY "${CMAKE_BINARY_DIR}/freeimage/include/" DESTINATION include)
-install(DIRECTORY "${CMAKE_BINARY_DIR}/freeimage/lib/" DESTINATION lib)
 if (WIN32)
+    install(DIRECTORY "${CMAKE_BINARY_DIR}/freeimage/include/" DESTINATION include)
+    install(DIRECTORY "${CMAKE_BINARY_DIR}/freeimage/lib/" DESTINATION lib)
     install(DIRECTORY "${CMAKE_BINARY_DIR}/freeimage/bin/" DESTINATION bin)
 endif ()
