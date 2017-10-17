@@ -1,4 +1,4 @@
-# Example 8
+# Example 7
 ## What it does
 The example demonstrates how to load a descriptor from a file and to compare two descriptors.
 
@@ -15,7 +15,7 @@ these aspects in detail.
 To get familiar with FSDK usage and common practices, please go through Example 1 first.
 
 ## How to run
-./Example8 <descriptor1.xpk> <descriptor2.xpk> threshold
+./Example7 <descriptor1.xpk> <descriptor2.xpk> threshold
 
 ## Example output
 ```
