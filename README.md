@@ -22,7 +22,7 @@ Default  WITH_FREEIMAGE_EXAMPLE option is enabled.*
 From fsdk root.
 ```
 $ mkdir build && cd build
-$ cmake -DFSDK_ROOT=.. ../examples
+$ cmake -CMAKE_BUILD_TYPE=Release -DFSDK_ROOT=.. ../examples
 $ make
 ```
 
