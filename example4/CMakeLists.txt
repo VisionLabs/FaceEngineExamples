@@ -31,4 +31,15 @@ target_link_libraries(Example4 ${FSDK_LIBRARIES})
 
 qt5_use_modules(Example4 Gui)
 
+if (WIN32)
+	add_custom_command(
+		TARGET Example4 POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			$<TARGET_FILE:Qt5::Core>
+			$<TARGET_FILE:Qt5::Gui>
+			$<TARGET_FILE_DIR:Example4>
+	)
+endif ()
+
 install(TARGETS Example4 RUNTIME DESTINATION bin)
+install(FILES $<TARGET_FILE:Qt5::Core> $<TARGET_FILE:Qt5::Gui> DESTINATION bin)
