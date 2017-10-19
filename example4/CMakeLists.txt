@@ -39,7 +39,7 @@ if (WIN32)
 			$<TARGET_FILE:Qt5::Gui>
 			$<TARGET_FILE_DIR:Example4>
 	)
+	install(FILES $<TARGET_FILE:Qt5::Core> $<TARGET_FILE:Qt5::Gui> DESTINATION bin)
 endif ()
 
 install(TARGETS Example4 RUNTIME DESTINATION bin)
-install(FILES $<TARGET_FILE:Qt5::Core> $<TARGET_FILE:Qt5::Gui> DESTINATION bin)
