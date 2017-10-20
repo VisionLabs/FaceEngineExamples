@@ -61,6 +61,7 @@ Windows: automatic installation from CMakeLists file.
 ```
 $ cmake -DFSDK_ROOT=.. -DWITH_FREEIMAGE_EXAMPLE=ON ../examples
 ```
+Note for windows: when you build and install FreeImage example, freeimage dynamic library (freeimage.dll) is installed.
 
 **Run FreeImage example:**
 ```
@@ -78,6 +79,7 @@ If Qt is installed in non-system directory and can't be found by cmake automatic
 ```
 $ cmake -DFSDK_ROOT=.. -DWITH_QT_EXAMPLE=ON -DQt5Core_DIR=/usr/lib64/cmake/Qt5Core -DQt5Gui_DIR=/usr/lib64/cmake/Qt5Gui -DQt5_DIR=/usr/lib64/cmake/Qt5 ../examples
 ```
+Note for windows: when you build and install Qt example, qt dynamic libraries (QtCore.dll, QtGui.dll) is installed.
 
 **Run Qt example:**
 ```
