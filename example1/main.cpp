@@ -56,6 +56,11 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    if (faceEngine->getFaceEngineEdition() != fsdk::FaceEngineEdition::CompliteEdition) {
+        std::cerr << "FaceEngine SDK Frontend edition doesn't support face descriptors. Use FaceEngine SDK Complite edition" << std::endl;
+        return -1;
+    }
+
     // Create MTCNN detector.
     faceDetector = fsdk::acquire(faceEngine->createDetector(fsdk::ODT_MTCNN));
     if (!faceDetector) {

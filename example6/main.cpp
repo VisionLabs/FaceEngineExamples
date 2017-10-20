@@ -30,6 +30,11 @@ int main(int argc, char *argv[])
         std::cerr << "Failed to create face engine instance." << std::endl;
         return -1;
     }
+    
+    if (faceEngine->getFaceEngineEdition() != fsdk::FaceEngineEdition::CompliteEdition) {
+        std::cerr << "FaceEngine SDK Frontend edition doesn't support face descriptors. Use FaceEngine SDK Complite edition" << std::endl;
+        return -1;
+    }
 
     // Create MTCNN detector.
     fsdk::IDetectorPtr faceDetector = fsdk::acquire(faceEngine->createDetector(fsdk::ODT_MTCNN));
