@@ -1,4 +1,4 @@
-#include <FaceEngine.h>
+#include <fsdk/FaceEngine.h>
 
 #include <iostream>
 
@@ -57,7 +57,8 @@ int main(int argc, char *argv[])
     }
 
     if (faceEngine->getFaceEngineEdition() != fsdk::FaceEngineEdition::CompliteEdition) {
-        std::cerr << "FaceEngine SDK Frontend edition doesn't support face descriptors. Use FaceEngine SDK Complite edition" << std::endl;
+        std::cerr << "FaceEngine SDK Frontend edition doesn't support face descriptors. Use FaceEngine SDK Complite edition" <<
+            std::endl;
         return -1;
     }
 
@@ -185,7 +186,7 @@ fsdk::IDescriptorPtr extractDescriptor(
     // Loop through all the faces and find one with the best score.
     for (int detectionIndex = 0; detectionIndex < detectionsCount; ++detectionIndex) {
         fsdk::Detection &detection = detections[detectionIndex];
-        std::clog << "Detecting facial features (" << detectionIndex + 1 << "/" << detectionsCount << std::endl;
+        std::clog << "Detecting facial features (" << detectionIndex + 1 << "/" << detectionsCount << ")" << std::endl;
 
         // Choose the best detection.
         if (detection.score > bestScore) {

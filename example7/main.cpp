@@ -1,4 +1,4 @@
-#include <FaceEngine.h>
+#include <fsdk/FaceEngine.h>
 
 #include <iostream>
 #include <vector>
@@ -47,7 +47,8 @@ int main(int argc, char *argv[])
     }
     
     if (faceEngine->getFaceEngineEdition() != fsdk::FaceEngineEdition::CompliteEdition) {
-        std::cerr << "FaceEngine SDK Frontend edition doesn't support face descriptors. Use FaceEngine SDK Complite edition" << std::endl;
+        std::cerr << "FaceEngine SDK Frontend edition doesn't support face descriptors. Use FaceEngine SDK Complite edition" <<
+            std::endl;
         return -1;
     }
     

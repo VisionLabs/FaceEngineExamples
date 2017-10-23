@@ -5,7 +5,7 @@
 #ifndef FACEENGINE_IO_UTIL_H
 #define FACEENGINE_IO_UTIL_H
 
-#include <FaceEngine.h>
+#include <fsdk/FaceEngine.h>
 
 #include <vector>
 #include <fstream>

@@ -10,7 +10,7 @@ set(FSDK_ROOT "$ENV{FSDKDIR}" CACHE PATH "Vision Labs Face SDK root directory.")
 
 # Look for headers.
 find_path(FSDK_INCLUDE_DIRS
-          NAMES FaceEngine.h Types.h Def.h
+          NAMES fsdk/FaceEngine.h fsdk/Types.h fsdk/Def.h
           HINTS $ENV{FSDKDIR}
           PATHS ${FSDK_ROOT}
           PATH_SUFFIXES include)
