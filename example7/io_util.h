@@ -13,7 +13,7 @@
 struct VectorArchive: fsdk::IArchive
 {
 	std::vector<uint8_t>& dataOut;
-	int index = 0;
+	size_t index = 0;
 
 	bool write(const void* data, size_t size) override {
 		const uint8_t* p = reinterpret_cast<const uint8_t*>(data);
