@@ -44,6 +44,9 @@ $ build/example6/Example6 examples/images/portrait.ppm
 
 # Descriptor and batch loading
 $ build/example7/Example7 examples/descriptors/Cameron_Diaz.xpk examples/descriptors/Cameron_Diaz_2.xpk 0.7
+
+# Liveness example
+$ build/example8/Example8 <web_cam_id> <test_number>
 ```
 
 ## FreeImage example
