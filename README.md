@@ -54,7 +54,7 @@ Also example8 requires OpenCV library with imgproc and highgui modules.*
 
 **Build example8 with OpenCV (from FSDK_ROOT/build):**
 ```
-$ cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILDWITH_LIVENESS_EXAMPLE -DOpenCV_DIR=<path_to_opencv> -DFSDK_ROOT=.. -DLSDK_ROOT=..
+$ cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILDWITH_LIVENESS_EXAMPLE=ON -DOpenCV_DIR=<path_to_opencv> -DFSDK_ROOT=.. -DLSDK_ROOT=..
 ```
 **Run example8:**
 ```
