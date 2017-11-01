@@ -58,7 +58,9 @@ Also example8 requires OpenCV library with imgproc and highgui modules.
 $ cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILDWITH_LIVENESS_EXAMPLE -DOpenCV_DIR=<path_to_opencv> -DFSDK_ROOT=.. -DLSDK_ROOT=..
 ```
 **Run example8:**
+```
 $ build/example8/Example8 <web_cam_id> <test_number>
+```
 
 ## FreeImage example
 Note: the installation command FreeImage for Centos:
