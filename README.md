@@ -19,15 +19,26 @@ Linux families (RHEL, CentOS, Fedora).
 Example 4 shows how to work with images of different formats, for example, jpeg.
 Default  WITH_FREEIMAGE_EXAMPLE option is enabled.*
 
-From fsdk root.
+*To build the example 8 WITH_LIVENESS_EXAMPLE option must be installed.
+Example 8 shows how to work with Liveness Engine of different formats, for example, jpeg.
+Default  WITH_LIVENESS_EXAMPLE option is enabled.
+Also example8 requires OpenCV library with imgproc and highgui modules.
+
+From Luna SDK root.
 ```
 $ mkdir build && cd build
 $ cmake -DCMAKE_BUILD_TYPE=Release -DFSDK_ROOT=.. ../examples
 $ make
 ```
 
+**Build example8 with OpenCV (from FSDK_ROOT/build):**
+
+```
+$ cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILDWITH_LIVENESS_EXAMPLE -DOpenCV_DIR=<path_to_opencv> -DFSDK_ROOT=.. -DLSDK_ROOT=..
+```
+
 ## Run examples
-Note: data folder must be at <fsdk_root>/data on Windows and on Linux.
+Note: data folder must be at <LUNA_SDK_root>/data on Windows and on Linux.
 ```
 # Detecting, Extracting, Matching
 $ build/example1/Example1 examples/images/Cameron_Diaz.ppm examples/images/Cameron_Diaz_2.ppm 0.7
@@ -88,3 +99,4 @@ Note for windows: when you build and install Qt example, qt dynamic libraries (Q
 ```
 $ build/example4/Example4 examples/images/Jennifer_Aniston.jpg
 ```
+
