@@ -46,7 +46,7 @@ $ build/example6/Example6 examples/images/portrait.ppm
 $ build/example7/Example7 examples/descriptors/Cameron_Diaz.xpk examples/descriptors/Cameron_Diaz_2.xpk 0.7
 ```
 
-##Liveness example 
+## Liveness example 
 *To build the example 8 WITH_LIVENESS_EXAMPLE option must be installed.
 Example 8 shows how to work with Liveness Engine of different formats, for example, jpeg.
 Default  WITH_LIVENESS_EXAMPLE option is enabled.
