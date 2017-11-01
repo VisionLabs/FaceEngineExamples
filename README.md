@@ -19,22 +19,11 @@ Linux families (RHEL, CentOS, Fedora).
 Example 4 shows how to work with images of different formats, for example, jpeg.
 Default  WITH_FREEIMAGE_EXAMPLE option is enabled.*
 
-*To build the example 8 WITH_LIVENESS_EXAMPLE option must be installed.
-Example 8 shows how to work with Liveness Engine of different formats, for example, jpeg.
-Default  WITH_LIVENESS_EXAMPLE option is enabled.
-Also example8 requires OpenCV library with imgproc and highgui modules.
-
 From Luna SDK root.
 ```
 $ mkdir build && cd build
 $ cmake -DCMAKE_BUILD_TYPE=Release -DFSDK_ROOT=.. ../examples
 $ make
-```
-
-**Build example8 with OpenCV (from FSDK_ROOT/build):**
-
-```
-$ cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILDWITH_LIVENESS_EXAMPLE -DOpenCV_DIR=<path_to_opencv> -DFSDK_ROOT=.. -DLSDK_ROOT=..
 ```
 
 ## Run examples
@@ -55,10 +44,21 @@ $ build/example6/Example6 examples/images/portrait.ppm
 
 # Descriptor and batch loading
 $ build/example7/Example7 examples/descriptors/Cameron_Diaz.xpk examples/descriptors/Cameron_Diaz_2.xpk 0.7
-
-# Liveness example
-$ build/example8/Example8 <web_cam_id> <test_number>
 ```
+
+##Liveness example 
+*To build the example 8 WITH_LIVENESS_EXAMPLE option must be installed.
+Example 8 shows how to work with Liveness Engine of different formats, for example, jpeg.
+Default  WITH_LIVENESS_EXAMPLE option is enabled.
+Also example8 requires OpenCV library with imgproc and highgui modules.
+
+**Build example8 with OpenCV (from FSDK_ROOT/build):**
+
+```
+$ cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILDWITH_LIVENESS_EXAMPLE -DOpenCV_DIR=<path_to_opencv> -DFSDK_ROOT=.. -DLSDK_ROOT=..
+```
+**Run example8:**
+$ build/example8/Example8 <web_cam_id> <test_number>
 
 ## FreeImage example
 Note: the installation command FreeImage for Centos:
