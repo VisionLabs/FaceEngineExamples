@@ -21,7 +21,7 @@ endif ()
 
 option(WITH_FREEIMAGE_EXAMPLE "Built example with freeimage library." OFF)
 option(WITH_QT_EXAMPLE "Built example with qt library." OFF)
-option(WITH_LIVENESS_EXAMPLE "Built example with qt library." OFF)
+option(WITH_LIVENESS_EXAMPLE "Built example with liveness example." OFF)
 
 add_subdirectory(example1)
 add_subdirectory(example2)
