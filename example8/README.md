@@ -11,7 +11,7 @@ This example assumes that you have read the **FaceEngine Handbook** and **Livene
 like memory management, object ownership and life-time control. This sample will not explain
 these aspects in detail.
 
-This example requires installed OpenCV library with imgproc and highgui modules, for additional information refer to https://opencv.org/.
+This example requires installed OpenCV library with imgproc, highgui and videoio modules, for additional information refer to https://opencv.org/.
 
 ## Example walkthrough
 This example consists of next stages:
