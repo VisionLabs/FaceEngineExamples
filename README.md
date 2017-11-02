@@ -50,7 +50,7 @@ $ build/example7/Example7 examples/descriptors/Cameron_Diaz.xpk examples/descrip
 *To build the example 8 WITH_LIVENESS_EXAMPLE option must be installed.
 Example 8 shows how to work with Liveness Engine of different formats, for example, jpeg.
 Default  WITH_LIVENESS_EXAMPLE option is enabled.
-Also example8 requires OpenCV library with imgproc and highgui modules.*
+Also example8 requires OpenCV library with imgproc, highgui and videoio modules.*
 
 **Build example8 with OpenCV (from FSDK_ROOT/build):**
 ```

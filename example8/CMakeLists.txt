@@ -9,7 +9,7 @@ find_package(LivenessEngineSDK REQUIRED)
 include_directories(${LSDK_INCLUDE_DIRS})
 include_directories(${FSDK_INCLUDE_DIRS})
 
-find_package(OpenCV REQUIRED highgui)
+find_package(OpenCV REQUIRED highgui imgproc videoio)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 add_executable(Example8 ${HEADERS} ${SOURCES})
