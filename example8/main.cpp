@@ -1,6 +1,6 @@
 #include <stdio.h>     
 #include <stdlib.h>
-
+#include <ctime>
 #include <iostream>
 #include <vector>
 #include <lsdk/LivenessEngine.h>
@@ -101,12 +101,13 @@ int main(int argc, char* argv[]) {
 	bool success = true;
 
 	//Preallocate storage frame for capture
-	int height = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
-	int width = cap.get(CV_CAP_PROP_FRAME_WIDTH);
+	int height =static_cast<int>(cap.get(CV_CAP_PROP_FRAME_HEIGHT)+0.5);
+	int width = static_cast<int>(cap.get(CV_CAP_PROP_FRAME_WIDTH)+0.5);
+	
 	cap.set(CV_CAP_PROP_FPS, 15.0);
 	cv::Mat output(height, width, CV_8UC3);
 
-	for (int i =0; i< chosen.size(); i++) {
+	for (unsigned int i =0; i< chosen.size(); i++) {
 
 		//Create liveness according to chosen type
 		auto liveness = acquire(livenessEngine->createLiveness(chosen[i]));

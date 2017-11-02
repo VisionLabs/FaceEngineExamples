@@ -13,6 +13,7 @@ find_package(OpenCV REQUIRED highgui imgproc videoio)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 add_executable(Example8 ${HEADERS} ${SOURCES})
+target_compile_options(Example8 PRIVATE "-Wall")
 
 target_link_libraries(Example8 ${OpenCV_LIBS} ${FSDK_LIBRARIES} ${LSDK_LIBRARIES})
 	
