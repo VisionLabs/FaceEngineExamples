@@ -14,7 +14,7 @@ these aspects in detail.
 This example requires installed OpenCV library with imgproc, highgui and videoio modules, for additional information refer to https://opencv.org/.
 
 ## Example walkthrough
-This example consists of next stages:
+This example consists of the following stages:
 
 ### Stage 0. Preparations
 Argument parsing, SDK initialization, testing sequence preparation, video capturing.
@@ -52,10 +52,10 @@ pass Image to liveness instance and output picture and action calls to user via 
         } else process = false;
     }
 ```
-As the result we get flag whether or not liveness detection was successfull.
-This cycle repeats N times (N is specified as programm argument).
+As the result we get flag whether or not liveness detection was successful.
+This cycle repeats N times (N is specified as program argument).
 Program result equals to Bitwise AND of every cycle iteration result.
-if result == true then liveness is successfull, otherwise not.
+if result == true then liveness is successful, otherwise not.
 
 ## How to run
 ./Example8 <camera_number> <descriptor2.xpk> threshold
