@@ -248,33 +248,33 @@ int main(int argc, char *argv[])
 
         painter.setPen(penPoint);
         painter.drawPoint(
-                landmarks5[detectionIndex].landmarks[fsdk::IDetector::Landmarks5Indexes::LandmarkLeftEye].x +
+                landmarks5[detectionIndex].landmarks[fsdk::Landmarks5Indexes::LandmarkLeftEye].x +
                     detections[detectionIndex].rect.x,
-                landmarks5[detectionIndex].landmarks[fsdk::IDetector::Landmarks5Indexes::LandmarkLeftEye].y +
+                landmarks5[detectionIndex].landmarks[fsdk::Landmarks5Indexes::LandmarkLeftEye].y +
                     detections[detectionIndex].rect.y
         );
         painter.drawPoint(
-                landmarks5[detectionIndex].landmarks[fsdk::IDetector::Landmarks5Indexes::LandmarkRightEye].x +
+                landmarks5[detectionIndex].landmarks[fsdk::Landmarks5Indexes::LandmarkRightEye].x +
                     detections[detectionIndex].rect.x,
-                landmarks5[detectionIndex].landmarks[fsdk::IDetector::Landmarks5Indexes::LandmarkRightEye].y +
+                landmarks5[detectionIndex].landmarks[fsdk::Landmarks5Indexes::LandmarkRightEye].y +
                     detections[detectionIndex].rect.y
         );
         painter.drawPoint(
-                landmarks5[detectionIndex].landmarks[fsdk::IDetector::Landmarks5Indexes::LandmarkNose].x +
+                landmarks5[detectionIndex].landmarks[fsdk::Landmarks5Indexes::LandmarkNose].x +
                     detections[detectionIndex].rect.x,
-                landmarks5[detectionIndex].landmarks[fsdk::IDetector::Landmarks5Indexes::LandmarkNose].y +
+                landmarks5[detectionIndex].landmarks[fsdk::Landmarks5Indexes::LandmarkNose].y +
                     detections[detectionIndex].rect.y
         );
         painter.drawPoint(
-                landmarks5[detectionIndex].landmarks[fsdk::IDetector::Landmarks5Indexes::LandmarkMouthLeftCorner].x +
+                landmarks5[detectionIndex].landmarks[fsdk::Landmarks5Indexes::LandmarkMouthLeftCorner].x +
                     detections[detectionIndex].rect.x,
-                landmarks5[detectionIndex].landmarks[fsdk::IDetector::Landmarks5Indexes::LandmarkMouthLeftCorner].y +
+                landmarks5[detectionIndex].landmarks[fsdk::Landmarks5Indexes::LandmarkMouthLeftCorner].y +
                     detections[detectionIndex].rect.y
         );
         painter.drawPoint(
-                landmarks5[detectionIndex].landmarks[fsdk::IDetector::Landmarks5Indexes::LandmarkMouthRightCorner].x +
+                landmarks5[detectionIndex].landmarks[fsdk::Landmarks5Indexes::LandmarkMouthRightCorner].x +
                     detections[detectionIndex].rect.x,
-                landmarks5[detectionIndex].landmarks[fsdk::IDetector::Landmarks5Indexes::LandmarkMouthRightCorner].y +
+                landmarks5[detectionIndex].landmarks[fsdk::Landmarks5Indexes::LandmarkMouthRightCorner].y +
                     detections[detectionIndex].rect.y
         );
 
