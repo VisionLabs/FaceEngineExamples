@@ -73,7 +73,7 @@ Also example9 requires OpenCV library with imgproc, highgui and videoio modules,
 ```
 $ cmake ../examples -DCMAKE_BUILD_TYPE=Release -DWITH_LIVENESS_EXAMPLE=ON -WITH_DEPTH_LIVENESS=ON -DOpenCV_DIR=<path_to_opencv> -DFSDK_ROOT=.. -DLSDK_ROOT=..
 ```
-**Run example8:**
+**Run example9:**
 ```
 $ build/example9/Example9
 ```
