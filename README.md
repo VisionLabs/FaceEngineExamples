@@ -48,7 +48,7 @@ $ build/example7/Example7 examples/descriptors/Cameron_Diaz.xpk examples/descrip
 
 ## Liveness example 
 
-#Simple liveness
+**Simple liveness**
 *To build the example 8 WITH_LIVENESS_EXAMPLE option must be installed.
 Example 8 shows how to work with Liveness Engine and simple liveness tests.
 Default  WITH_LIVENESS_EXAMPLE option is enabled.
@@ -63,7 +63,7 @@ $ cmake ../examples -DCMAKE_BUILD_TYPE=Release -DWITH_LIVENESS_EXAMPLE=ON -DOpen
 $ build/example8/Example8 <web_cam_id> <test_number>
 ```
 
-#Complex liveness
+**Complex liveness**
 *To build the example 9 WITH_DEPTH_LIVENESS option must be installed.
 Example 9 shows how to work with Liveness Engine and complex liveness test.
 Default  WITH_DEPTH_LIVENESS option is disabled.
