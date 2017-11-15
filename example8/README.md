@@ -21,7 +21,7 @@ Argument parsing, SDK initialization, testing sequence preparation, video captur
 
 ### Stage 1. Main cycle
 This stage is implemented in ```while(process)``` cycle.
-At this stage we grab frame from video capture, covert it from BGR to RGB, wrap it into FaceEngine structures,
+At this stage we grab frame from video capture, convert it from BGR to RGB, wrap it into FaceEngine structures,
 pass Image to liveness instance and output picture and action calls to user via Video window and console.
 ```C++
     while(process){
@@ -58,5 +58,5 @@ Program result equals to Bitwise AND of every cycle iteration result.
 if result == true then liveness is successful, otherwise not.
 
 ## How to run
-./Example8 <camera_number> <descriptor2.xpk> threshold
+./Example8 <camera_number> <test_number>
 
