@@ -59,7 +59,7 @@ As the result we get flag whether or not liveness detection was successful.
 if result == true then liveness is successful, otherwise not.
 
 ## Installation
-Before running this example, it is necessary to place OpenNI2 folder with drivers near the executable.
+After installation, before running this example, it is necessary to place OpenNI2 folder with drivers near the executable.
 
 ## How to run
 ./Example9
