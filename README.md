@@ -66,10 +66,9 @@ $ build/example8/Example8 <web_cam_id> <test_number>
 
 **Complex liveness**
 
-###### Depth Liveness
+**Depth Liveness**
 
-**Disclaimer**
-
+###### Disclaimer
 This liveness type works with 8bit rgb images and 16bit depth maps.
 Example9 initially was designed to work with kinect *v1* depth camera on Windows.
 Rest OS are not supported and require additional/substitutional software.
@@ -81,9 +80,9 @@ Interaction with device functionality is based on OpenCV interfaces with OPENNI2
 Required 3rdparty software: 
 * OpenNI2.2;
 * Required middleware: 
-  1. KinectSDK-v1.8 or above;
-  2. KinectRuntime-v1.8 or above;
-  3. KinectDeveloperToolkit-v1.8 or above;
+  * KinectSDK-v1.8 or above;
+  * KinectRuntime-v1.8 or above;
+  * KinectDeveloperToolkit-v1.8 or above;
 * OpenCV with OpenNI2 support (imgproc, highgui, videoio).
 
 *To build the example 9 WITH_DEPTH_LIVENESS option must be installed.
