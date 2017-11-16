@@ -79,7 +79,7 @@ Interaction with device functionality is based on OpenCV interfaces with OPENNI2
 ```
 Required 3rdparty software: 
 * OpenNI2.2;
-* Required middleware: 
+* Middleware: 
   * KinectSDK-v1.8 or above;
   * KinectRuntime-v1.8 or above;
   * KinectDeveloperToolkit-v1.8 or above;
