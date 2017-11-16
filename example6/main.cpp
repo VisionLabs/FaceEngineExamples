@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
 
         // Extract face descriptor.
         // This is typically the most time-consuming task.
-        fsdk::Result<fsdk::FSDKError> descriptorExtractorResult = descriptorExtractor->extract(
+        fsdk::ResultValue<FSDKError, float> descriptorExtractorResult = descriptorExtractor->extract(
                 image,
                 detections[detectionIndex],
                 landmarks5[detectionIndex],
