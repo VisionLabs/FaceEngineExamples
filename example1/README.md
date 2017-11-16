@@ -79,7 +79,7 @@ if (!descriptor) {
 
 // Extract face descriptor.
 // This is typically the most time-consuming task.
-fsdk::Result<fsdk::FSDKError> descriptorExtractorResult = descriptorExtractor->extract(
+fsdk::ResultValue<FSDKError, float> descriptorExtractorResult = descriptorExtractor->extract(
         image,
         detections[bestDetectionIndex],
         landmarks5[bestDetectionIndex],
