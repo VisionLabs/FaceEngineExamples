@@ -49,6 +49,7 @@ $ build/example7/Example7 examples/descriptors/Cameron_Diaz.xpk examples/descrip
 ## Liveness example 
 
 **Simple liveness**
+
 *To build the example 8 WITH_LIVENESS_EXAMPLE option must be installed.
 Example 8 shows how to work with Liveness Engine and simple liveness tests.
 Default  WITH_LIVENESS_EXAMPLE option is enabled.
@@ -64,14 +65,33 @@ $ build/example8/Example8 <web_cam_id> <test_number>
 ```
 
 **Complex liveness**
+
+**Depth Liveness**
+
+###### Disclaimer
+This liveness type works with 8bit rgb images and 16bit depth maps.
+Example9 initially was designed to work with kinect *v1* depth camera on Windows.
+Rest OS are not supported and require additional/substitutional software.
+
+Interaction with device functionality is based on OpenCV interfaces with OPENNI2 support, according to this scheme:
+```
+|Example9|-->|OpenCV|-->|OpenNI2|-->|Device Driver|-->|KinectV1|
+```
+Required 3rdparty software: 
+* OpenNI2.2;
+* Middleware: 
+  * KinectSDK-v1.8 or above;
+  * KinectRuntime-v1.8 or above;
+  * KinectDeveloperToolkit-v1.8 or above;
+* OpenCV with OpenNI2 support (imgproc, highgui, videoio).
+
 *To build the example 9 WITH_DEPTH_LIVENESS option must be installed.
 Example 9 shows how to work with Liveness Engine and complex liveness test.
-Default  WITH_DEPTH_LIVENESS option is disabled.
-Also example9 requires OpenCV library with imgproc, highgui and videoio modules, with OPENNI2 support*
+Default  WITH_DEPTH_LIVENESS option is disabled.*
 
 **Build example9 with OpenCV (from FSDK_ROOT/build):**
 ```
-$ cmake ../examples -DCMAKE_BUILD_TYPE=Release -DWITH_LIVENESS_EXAMPLE=ON -WITH_DEPTH_LIVENESS=ON -DOpenCV_DIR=<path_to_opencv> -DFSDK_ROOT=.. -DLSDK_ROOT=..
+$ cmake ../examples -DCMAKE_BUILD_TYPE=Release -DWITH_LIVENESS_EXAMPLE=ON -DWITH_DEPTH_LIVENESS=ON -DOpenCV_DIR=<path_to_opencv> -DFSDK_ROOT=.. -DLSDK_ROOT=..
 ```
 **Run example9:**
 ```
