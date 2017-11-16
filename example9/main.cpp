@@ -17,7 +17,6 @@ int main(int argc, char* argv[]) {
 
     //Turn on pixel remapping
     if (capture.get(CV_CAP_PROP_OPENNI_REGISTRATION) == 0) capture.set(CV_CAP_PROP_OPENNI_REGISTRATION, 1);
-    capture.set(CV_CAP_OPENNI_IMAGE_GENERATOR_OUTPUT_MODE, CV_CAP_OPENNI_VGA_30HZ);
 
     using namespace fsdk;
     using namespace lsdk;
